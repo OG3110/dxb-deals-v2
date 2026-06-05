@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXB Deals | Contact Tolga</title>
+<meta name="description" content="Speak directly with Tolga Keklik, Dubai-based business broker. Contact DXB Deals via WhatsApp or Instagram.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Outfit',sans-serif;background:#F6F2EA;color:#16302C;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ─── VARIABLES ────────────────────────────────────────────── */
+:root{
+  --teal:#0F2C30;--teal-2:#173D42;--teal-3:#0A1E22;
+  --gold:#FBD558;--gold-deep:#B5862A;--gold-soft:#FDF6DC;
+  --paper:#F6F2EA;--paper-2:#EEE8D6;--card:#FFFFFF;
+  --ink:#16302C;--ink-soft:#52615B;--muted:#8A938E;
+  --line:#E4DDCD;--line-soft:#EDE7DA;
+  --radius:18px;--radius-sm:10px;--maxw:1200px;
+  --shadow-card:0 8px 32px -8px rgba(15,44,48,.14);
+  --shadow-hover:0 24px 48px -18px rgba(15,44,48,.3);
+}
+
+/* ─── LAYOUT ───────────────────────────────────────────────── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+/* ─── NAV ──────────────────────────────────────────────────── */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 28px;display:flex;align-items:center;justify-content:space-between;height:72px;
+  background:rgba(246,242,234,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(228,221,205,.6);
+}
+.nav-logo{height:44px;width:auto}
+.nav-links{display:flex;align-items:center;gap:36px}
+.nav-links a{font-size:14.5px;font-weight:500;color:var(--ink-soft);position:relative;padding-bottom:2px;transition:color .2s}
+.nav-links a.active{color:var(--teal);font-weight:600}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--gold-deep);transition:width .25s}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a:hover{color:var(--teal)}
+.nav-wa{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;font-size:14px;font-weight:600;padding:11px 20px;border-radius:999px;transition:background .2s,transform .2s;white-space:nowrap}
+.nav-wa:hover{background:var(--teal-2);transform:translateY(-1px)}
+.burger{display:none;width:40px;height:40px;border-radius:8px;align-items:center;justify-content:center;border:1px solid var(--line);transition:.2s}
+.burger:hover{background:var(--paper-2)}
+.mobile-menu{display:none;position:fixed;inset:0;z-index:99;background:var(--paper);flex-direction:column;padding:88px 28px 40px;gap:4px;transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.mobile-menu.open{transform:none}
+.mobile-menu a{font-size:22px;font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--ink);padding:14px 0;border-bottom:1px solid var(--line);transition:color .2s}
+.mobile-menu a:hover{color:var(--teal)}
+.mobile-menu .mob-wa{margin-top:24px;display:flex;align-items:center;justify-content:center;gap:10px;background:var(--teal);color:#fff;padding:16px;border-radius:var(--radius-sm);font-weight:600;font-size:16px}
+
+/* ─── HERO ─────────────────────────────────────────────────── */
+.hero{
+  padding:140px 0 80px;
+  background:var(--paper);
+  border-bottom:1px solid var(--line);
+  text-align:center;
+}
+.hero-kicker{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gold-deep);background:var(--gold-soft);
+  padding:6px 16px;border-radius:999px;margin-bottom:20px;
+  opacity:0;
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(44px,7vw,88px);font-weight:600;
+  line-height:.95;letter-spacing:-.02em;color:var(--ink);
+  margin-bottom:18px;opacity:0;transform:translateY(20px);
+}
+.hero-sub{
+  font-size:clamp(15px,1.8vw,18px);font-weight:300;
+  color:var(--ink-soft);max-width:520px;margin:0 auto;
+  opacity:0;
+}
+
+/* ─── MAIN GRID ────────────────────────────────────────────── */
+.contact-section{padding:80px 0 100px}
+.contact-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:28px;align-items:start;
+}
+
+/* ─── BROKER CARD ──────────────────────────────────────────── */
+.broker-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);overflow:hidden;
+  box-shadow:var(--shadow-card);
+  opacity:0;transform:translateY(32px);
+}
+.broker-img-wrap{
+  position:relative;
+  aspect-ratio:1/1;
+  background:linear-gradient(160deg,var(--teal-2),var(--teal-3));
+  overflow:hidden;
+}
+.broker-img-wrap img{
+  width:100%;height:100%;object-fit:cover;object-position:top center;
+}
+.broker-img-ph{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;color:rgba(251,213,88,.6);
+}
+.broker-img-ph span{
+  font-family:'Cormorant Garamond',serif;font-size:20px;
+  font-style:italic;color:rgba(246,242,234,.8);
+}
+.broker-body{padding:28px 28px 30px}
+.broker-kicker{
+  font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--gold-deep);margin-bottom:10px;
+}
+.broker-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:38px;font-weight:600;line-height:1;
+  letter-spacing:-.01em;margin-bottom:12px;
+}
+.broker-desc{font-size:15px;color:var(--ink-soft);line-height:1.65;margin-bottom:22px}
+.broker-trust{display:flex;flex-direction:column;gap:12px;margin-bottom:28px}
+.broker-trust-item{
+  display:flex;align-items:center;gap:12px;
+  font-size:14.5px;font-weight:500;color:var(--ink);
+}
+.broker-trust-item svg{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:var(--gold-soft);padding:8px;color:var(--gold-deep);
+}
+.broker-actions{display:flex;flex-direction:column;gap:12px}
+.btn-wa{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  background:var(--teal);color:#fff;
+  font-size:15px;font-weight:600;
+  padding:14px 24px;border-radius:var(--radius-sm);
+  transition:background .2s,transform .2s;
+}
+.btn-wa:hover{background:var(--teal-2);transform:translateY(-2px)}
+.btn-ig{
+  display:flex;align-items:center;justify-content:center;gap:9px;
+  background:transparent;color:var(--teal);
+  font-size:15px;font-weight:600;
+  padding:12px 24px;border-radius:var(--radius-sm);
+  border:2px solid var(--line);
+  transition:border-color .2s,background .2s,transform .2s;
+}
+.btn-ig:hover{border-color:var(--teal);background:var(--paper);transform:translateY(-2px)}
+
+/* ─── INFO CARD ────────────────────────────────────────────── */
+.info-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:36px 36px 40px;
+  box-shadow:var(--shadow-card);
+  opacity:0;transform:translateY(32px);
+}
+.info-kicker{
+  font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;
+  color:var(--gold-deep);margin-bottom:14px;
+}
+.info-card h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(28px,3.5vw,42px);font-weight:600;
+  line-height:1.08;letter-spacing:-.01em;margin-bottom:14px;
+}
+.info-card > p{font-size:15px;color:var(--ink-soft);line-height:1.65;margin-bottom:32px}
+.contact-details{display:flex;flex-direction:column;gap:0;margin-bottom:36px}
+.contact-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:18px 0;border-bottom:1px solid var(--line-soft);
+  gap:16px;
+}
+.contact-row:first-child{border-top:1px solid var(--line-soft)}
+.contact-row-label{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.contact-row-value{font-size:16px;font-weight:600;color:var(--ink);text-align:right}
+.contact-row-value a{color:var(--teal);transition:color .18s}
+.contact-row-value a:hover{color:var(--gold-deep)}
+
+/* Private inventory box */
+.private-box{
+  background:var(--teal);border-radius:var(--radius-sm);
+  padding:28px;
+}
+.private-box h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px;font-weight:600;color:#fff;
+  margin-bottom:10px;line-height:1.2;
+}
+.private-box p{font-size:14px;color:rgba(246,242,234,.72);line-height:1.6;margin-bottom:20px}
+.btn-gold-sm{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--gold);color:var(--teal);
+  font-size:14px;font-weight:700;
+  padding:12px 20px;border-radius:999px;
+  transition:.2s;
+}
+.btn-gold-sm:hover{background:#fff}
+
+/* ─── FOOTER ───────────────────────────────────────────────── */
+.footer{background:var(--teal);padding:56px 0 0}
+.footer-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:48px;border-bottom:1px solid rgba(246,242,234,.1)}
+.footer-brand img{height:40px;margin-bottom:14px;opacity:.9}
+.footer-brand p{font-size:13px;color:rgba(246,242,234,.55);max-width:260px;line-height:1.6}
+.footer-col h4{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col ul a{font-size:14px;color:rgba(246,242,234,.72);transition:color .18s}
+.footer-col ul a:hover{color:#fff}
+.footer-wa{display:inline-flex;align-items:center;gap:9px;background:var(--gold);color:var(--teal);font-size:14px;font-weight:700;padding:13px 22px;border-radius:999px;transition:.2s}
+.footer-wa:hover{background:#fff}
+.footer-copy{padding:20px 0;font-size:12px;color:rgba(246,242,234,.35);text-align:center}
+
+/* ─── RESPONSIVE ───────────────────────────────────────────── */
+@media(max-width:860px){
+  .contact-grid{grid-template-columns:1fr}
+}
+@media(max-width:680px){
+  .wrap,.nav{padding-left:18px;padding-right:18px}
+  .nav-links{display:none}
+  .burger{display:flex}
+  .mobile-menu{display:flex}
+  .hero{padding:120px 0 60px}
+  .contact-section{padding:56px 0 72px}
+  .info-card{padding:28px 24px 32px}
+  .broker-body{padding:22px 22px 24px}
+  .footer-inner{flex-direction:column;gap:32px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html"><img src="dxb-logo.png" alt="DXB Deals" class="nav-logo"></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="listings.html">Buy a Business</a>
+    <a href="sell.html">Sell a Business</a>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20speak%20with%20you%20about%20DXB%20Deals." target="_blank" rel="noopener" class="nav-wa">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+      Chat on WhatsApp
+    </a>
+    <button class="burger" id="burger" aria-label="Open menu">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+  </div>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="listings.html">Buy a Business</a>
+  <a href="sell.html">Sell a Business</a>
+  <a href="contact.html">Contact</a>
+  <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20speak%20with%20you%20about%20DXB%20Deals." target="_blank" rel="noopener" class="mob-wa">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+    Chat on WhatsApp
+  </a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-kicker" id="heroKicker">Direct Contact</div>
+    <h1 class="hero-title" id="heroTitle">Speak directly<br>with Tolga</h1>
+    <p class="hero-sub" id="heroSub">Whether you want to buy, sell or request private inventory access, you can contact DXB Deals directly through WhatsApp or Instagram.</p>
+  </div>
+</section>
+
+<!-- CONTACT SECTION -->
+<section class="contact-section">
+  <div class="wrap">
+    <div class="contact-grid">
+
+      <!-- Broker Card -->
+      <div class="broker-card" id="brokerCard">
+        <div class="broker-img-wrap">
+          <div class="broker-img-ph">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+            <span>Tolga Keklik</span>
+          </div>
+          <img src="images/tolga-keklik.png" alt="Tolga Keklik" onerror="this.style.display='none'" loading="eager">
+        </div>
+        <div class="broker-body">
+          <div class="broker-kicker">Your Direct Contact</div>
+          <h2 class="broker-name">Tolga Keklik</h2>
+          <p class="broker-desc">Dubai-based business broker helping investors acquire and sell businesses confidentially across the UAE.</p>
+          <div class="broker-trust">
+            <div class="broker-trust-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              10+ Years Experience
+            </div>
+            <div class="broker-trust-item">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Confidential &amp; Discreet
+            </div>
+          </div>
+          <div class="broker-actions">
+            <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20speak%20with%20you%20about%20DXB%20Deals." target="_blank" rel="noopener" class="btn-wa">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+              Chat on WhatsApp
+            </a>
+            <a href="https://www.instagram.com/dxb.deals/" target="_blank" rel="noopener" class="btn-ig">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+              Instagram DM
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Card -->
+      <div class="info-card" id="infoCard">
+        <div class="info-kicker">Private Inventory Access</div>
+        <h2>Tell us what you<br>are looking for.</h2>
+        <p>Serious buyers can share their preferred category, budget, location and acquisition criteria. Sellers can also start with a confidential message.</p>
+
+        <div class="contact-details">
+          <div class="contact-row">
+            <span class="contact-row-label">WhatsApp</span>
+            <span class="contact-row-value">
+              <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20speak%20with%20you%20about%20DXB%20Deals." target="_blank" rel="noopener">+971 50 318 6047</a>
+            </span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-row-label">Instagram</span>
+            <span class="contact-row-value">
+              <a href="https://www.instagram.com/dxb.deals/" target="_blank" rel="noopener">@dxb.deals</a>
+            </span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-row-label">Location</span>
+            <span class="contact-row-value">Dubai, UAE</span>
+          </div>
+          <div class="contact-row">
+            <span class="contact-row-label">Response Time</span>
+            <span class="contact-row-value">Within 24 hours</span>
+          </div>
+        </div>
+
+        <div class="private-box">
+          <h3>Request the private inventory</h3>
+          <p>Not all listings are public. Message Tolga directly to access the full confidential inventory tailored to your budget and criteria.</p>
+          <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20request%20access%20to%20the%20DXB%20Deals%20private%20inventory." target="_blank" rel="noopener" class="btn-gold-sm">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+            Request Private Inventory
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <img src="dxb-logo.png" alt="DXB Deals">
+      <p>Confidential business brokerage across Dubai and the UAE.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="listings.html">Buy a Business</a></li>
+        <li><a href="sell.html">Sell a Business</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Direct Contact</h4>
+      <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20speak%20with%20you%20about%20DXB%20Deals." target="_blank" rel="noopener" class="footer-wa">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+        Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+  <div class="wrap footer-copy">
+    <p>© <span id="yr"></span> DXB Deals · Confidential Business Brokerage · Dubai, UAE.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── Burger ── */
+const burger = document.getElementById('burger');
+const mobileMenu = document.getElementById('mobileMenu');
+burger.addEventListener('click', () => mobileMenu.classList.toggle('open'));
+mobileMenu.querySelectorAll('a').forEach(a =>
+  a.addEventListener('click', () => mobileMenu.classList.remove('open'))
+);
+
+/* ── Hero ── */
+gsap.timeline({ defaults:{ ease:'power3.out' } })
+  .to('#heroKicker', { opacity:1, duration:.5, delay:.2 })
+  .to('#heroTitle',  { opacity:1, y:0, duration:.7 }, '-=.2')
+  .to('#heroSub',    { opacity:1, duration:.6 }, '-=.35');
+
+/* ── Cards ── */
+gsap.to('#brokerCard', {
+  opacity:1, y:0, duration:.75, ease:'power2.out',
+  scrollTrigger:{ trigger:'#brokerCard', start:'top 85%', toggleActions:'play none none none' }
+});
+gsap.to('#infoCard', {
+  opacity:1, y:0, duration:.75, ease:'power2.out', delay:.1,
+  scrollTrigger:{ trigger:'#infoCard', start:'top 85%', toggleActions:'play none none none' }
+});
+
+/* ── Footer year ── */
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+/* ── Reduced motion ── */
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  gsap.globalTimeline.timeScale(0);
+}
+</script>
+</body>
+</html>
