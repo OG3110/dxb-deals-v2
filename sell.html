@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXB Deals | Sell Your Business Confidentially</title>
+<meta name="description" content="Sell your Dubai business discreetly through private buyer channels without going public.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─── RESET ────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{font-family:'Outfit',sans-serif;background:#F6F2EA;color:#16302C;line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ─── VARIABLES ────────────────────────────────────────────── */
+:root{
+  --teal:#0F2C30;--teal-2:#173D42;--teal-3:#0A1E22;
+  --gold:#FBD558;--gold-deep:#B5862A;--gold-soft:#FDF6DC;
+  --paper:#F6F2EA;--paper-2:#EEE8D6;--card:#FFFFFF;
+  --ink:#16302C;--ink-soft:#52615B;--muted:#8A938E;
+  --line:#E4DDCD;--line-soft:#EDE7DA;
+  --radius:18px;--radius-sm:10px;--maxw:1200px;
+  --shadow-card:0 8px 32px -8px rgba(15,44,48,.14);
+  --shadow-hover:0 24px 48px -18px rgba(15,44,48,.32);
+}
+
+/* ─── LAYOUT ───────────────────────────────────────────────── */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+
+/* ─── NAV ──────────────────────────────────────────────────── */
+:root{ --nav-h:72px }
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(246,242,234,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(228,221,205,.6)}
+.nav-top{display:flex;align-items:center;justify-content:space-between;height:var(--nav-h);padding:0 28px}
+.nav-logo{height:44px;width:auto}
+.nav-links{display:flex;align-items:center;gap:36px}
+.nav-links a{font-size:14.5px;font-weight:500;color:var(--ink-soft);position:relative;padding-bottom:2px;transition:color .2s}
+.nav-links a.active{color:var(--teal);font-weight:600}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--gold-deep);transition:width .25s}
+.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a:hover{color:var(--teal)}
+.nav-wa{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;font-size:14px;font-weight:600;padding:11px 20px;border-radius:999px;transition:background .2s,transform .2s;white-space:nowrap}
+.nav-wa:hover{background:var(--teal-2);transform:translateY(-1px)}
+
+/* ─── HERO ─────────────────────────────────────────────────── */
+.hero{
+  position:relative;padding-top:72px;
+  min-height:100svh;display:flex;align-items:flex-end;overflow:hidden;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:var(--teal-3);
+  background-image:url('hero.jpg');
+  background-size:cover;background-position:center 30%;
+}
+.hero-bg::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(
+    to bottom,
+    rgba(10,30,34,.2) 0%,
+    rgba(10,30,34,.05) 30%,
+    rgba(10,30,34,.6) 65%,
+    rgba(10,30,34,.92) 100%
+  );
+}
+.hero-content{
+  position:relative;z-index:2;width:100%;
+  max-width:var(--maxw);margin:0 auto;padding:0 28px 80px;
+}
+.hero-kicker{
+  display:inline-block;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gold);border:1px solid rgba(251,213,88,.35);
+  padding:6px 14px;border-radius:999px;margin-bottom:20px;opacity:0;
+}
+.hero-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(44px,8vw,96px);font-weight:600;
+  line-height:.95;letter-spacing:-.02em;color:#fff;
+  max-width:800px;margin-bottom:20px;opacity:0;transform:translateY(24px);
+}
+.hero-title em{font-style:italic;color:var(--gold)}
+.hero-sub{
+  font-size:clamp(15px,1.9vw,18px);font-weight:300;
+  color:rgba(246,242,234,.8);max-width:540px;
+  margin-bottom:32px;opacity:0;
+}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:36px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:13px;font-weight:500;color:rgba(246,242,234,.9);
+  background:rgba(255,255,255,.08);border:1px solid rgba(251,213,88,.25);
+  padding:8px 16px;border-radius:999px;backdrop-filter:blur(6px);
+  opacity:0;transform:translateY(10px);
+}
+.hero-badge svg{color:var(--gold)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:14px;opacity:0}
+.btn-dark{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--teal);color:#fff;
+  font-size:15px;font-weight:600;
+  padding:14px 26px;border-radius:999px;
+  border:2px solid transparent;
+  transition:background .2s,transform .2s;
+}
+.btn-dark:hover{background:var(--teal-2);transform:translateY(-2px)}
+.btn-light{
+  display:inline-flex;align-items:center;gap:9px;
+  background:transparent;color:#fff;
+  font-size:15px;font-weight:600;
+  padding:12px 24px;border-radius:999px;
+  border:2px solid rgba(255,255,255,.4);
+  transition:border-color .2s,background .2s,transform .2s;
+}
+.btn-light:hover{border-color:#fff;background:rgba(255,255,255,.1);transform:translateY(-2px)}
+
+/* ─── SECTION KICKER ───────────────────────────────────────── */
+.sec-kicker{
+  display:inline-block;
+  font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--gold-deep);background:var(--gold-soft);
+  padding:5px 14px;border-radius:999px;margin-bottom:16px;
+}
+
+/* ─── PROCESS SECTION ──────────────────────────────────────── */
+.process{padding:100px 0}
+.process-head{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  flex-wrap:wrap;gap:24px;margin-bottom:60px;
+}
+.process-head h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,5.5vw,62px);
+  font-weight:600;line-height:1.02;letter-spacing:-.02em;max-width:500px;
+}
+.process-head-right{font-size:15px;color:var(--ink-soft);max-width:320px;line-height:1.6}
+.process-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:20px;
+}
+.process-card{
+  background:var(--card);border:1px solid var(--line);
+  border-radius:var(--radius);padding:36px 32px;
+  box-shadow:var(--shadow-card);
+  transition:transform .3s,box-shadow .3s,border-color .3s;
+  opacity:0;transform:translateY(32px);
+}
+.process-card:hover{transform:translateY(-5px);box-shadow:var(--shadow-hover);border-color:rgba(251,213,88,.4)}
+.process-num{
+  font-family:'Cormorant Garamond',serif;
+  font-size:52px;font-weight:700;
+  color:var(--gold);line-height:1;
+  margin-bottom:20px;letter-spacing:-.02em;
+}
+.process-card h3{
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px;font-weight:600;line-height:1.2;
+  margin-bottom:12px;
+}
+.process-card p{font-size:15px;color:var(--ink-soft);line-height:1.65}
+
+/* ─── CONFIDENTIALITY SECTION ──────────────────────────────── */
+.confidential{padding:0 0 100px}
+.confidential-card{
+  background:var(--teal);border-radius:var(--radius);
+  padding:64px 72px;
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:60px;align-items:center;
+  position:relative;overflow:hidden;
+}
+.confidential-card::before{
+  content:'';position:absolute;
+  top:-100px;right:-100px;
+  width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle,rgba(251,213,88,.1),transparent 70%);
+  pointer-events:none;
+}
+.conf-kicker{
+  font-size:10.5px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:rgba(251,213,88,.7);margin-bottom:16px;
+}
+.confidential-card h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(30px,4vw,48px);font-weight:600;
+  color:#fff;line-height:1.05;margin-bottom:16px;
+}
+.confidential-card > div > p{font-size:15px;color:rgba(246,242,234,.72);line-height:1.65}
+.conf-list{list-style:none;display:flex;flex-direction:column;gap:16px}
+.conf-list li{
+  display:flex;align-items:center;gap:14px;
+  font-size:15px;font-weight:500;color:rgba(246,242,234,.88);
+  opacity:0;transform:translateX(-16px);
+}
+.conf-list li svg{
+  flex-shrink:0;
+  width:22px;height:22px;border-radius:50%;
+  background:rgba(251,213,88,.15);
+  padding:4px;color:var(--gold);
+}
+
+/* ─── FINAL CTA ────────────────────────────────────────────── */
+.final-cta{
+  padding:100px 0;text-align:center;
+  background:var(--paper-2);
+}
+.final-cta h2{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(36px,5vw,64px);font-weight:600;
+  line-height:1.05;letter-spacing:-.02em;
+  max-width:600px;margin:0 auto 16px;
+  opacity:0;transform:translateY(20px);
+}
+.final-cta p{
+  font-size:16px;color:var(--ink-soft);max-width:420px;
+  margin:0 auto 36px;line-height:1.6;
+  opacity:0;
+}
+.final-cta-actions{
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:center;
+  opacity:0;
+}
+.btn-cta-dark{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--teal);color:#fff;
+  font-size:15px;font-weight:600;
+  padding:16px 28px;border-radius:999px;
+  transition:background .2s,transform .2s;
+}
+.btn-cta-dark:hover{background:var(--teal-2);transform:translateY(-2px)}
+.btn-cta-gold{
+  display:inline-flex;align-items:center;gap:9px;
+  background:var(--gold);color:var(--teal);
+  font-size:15px;font-weight:700;
+  padding:14px 26px;border-radius:999px;
+  transition:background .2s,transform .2s;
+}
+.btn-cta-gold:hover{background:#fff;transform:translateY(-2px)}
+
+/* ─── FOOTER ───────────────────────────────────────────────── */
+.footer{background:var(--teal);padding:56px 0 0}
+.footer-inner{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:48px;flex-wrap:wrap;padding-bottom:48px;
+  border-bottom:1px solid rgba(246,242,234,.1);
+}
+.footer-brand img{height:40px;margin-bottom:14px;opacity:.9}
+.footer-brand p{font-size:13px;color:rgba(246,242,234,.55);max-width:260px;line-height:1.6}
+.footer-col h4{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col ul a{font-size:14px;color:rgba(246,242,234,.72);transition:color .18s}
+.footer-col ul a:hover{color:#fff}
+.footer-wa{display:inline-flex;align-items:center;gap:9px;background:var(--gold);color:var(--teal);font-size:14px;font-weight:700;padding:13px 22px;border-radius:999px;transition:.2s}
+.footer-wa:hover{background:#fff}
+.footer-copy{padding:20px 0;font-size:12px;color:rgba(246,242,234,.35);text-align:center}
+
+/* ─── RESPONSIVE ───────────────────────────────────────────── */
+@media(max-width:900px){
+  .process-grid{grid-template-columns:1fr}
+  .confidential-card{grid-template-columns:1fr;padding:48px 40px;gap:40px}
+}
+@media(max-width:680px){
+  :root{ --nav-h:108px }
+  .wrap,.nav-top{padding-left:18px;padding-right:18px}
+  .nav-links{justify-content:center;gap:0;border-top:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{font-size:12.5px;padding:10px 14px;white-space:nowrap}
+  .nav-links a::after{display:none}
+  .hero-content{padding-bottom:60px;padding-left:18px;padding-right:18px}
+  .process{padding:72px 0}
+  .process-head-right{max-width:none}
+  .confidential-card{padding:36px 24px}
+  .final-cta{padding:72px 0}
+  .footer-inner{flex-direction:column;gap:32px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-top">
+    <a href="index.html"><img src="dxb-logo.png" alt="DXB Deals" class="nav-logo"></a>
+    <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20discuss%20selling%20my%20business%20confidentially." target="_blank" rel="noopener" class="nav-wa">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+      Chat on WhatsApp
+    </a>
+  </div>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="listings.html">Buy a Business</a>
+    <a href="sell.html" class="active">Sell a Business</a>
+    <a href="contact.html">Contact</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-kicker" id="heroKicker">Sell Confidentially</div>
+    <h1 class="hero-title" id="heroTitle">Sell Your Business <em>Without</em> Going Public</h1>
+    <p class="hero-sub" id="heroSub">DXB Deals helps Dubai business owners discreetly present their opportunity through private buyer channels, WhatsApp and Instagram — without exposing the business publicly.</p>
+    <div class="hero-badges" id="heroBadges">
+      <span class="hero-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        Confidential Process
+      </span>
+      <span class="hero-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        Private Buyer Network
+      </span>
+      <span class="hero-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+        Direct Broker Handling
+      </span>
+    </div>
+    <div class="hero-actions" id="heroActions">
+      <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20discuss%20selling%20my%20business%20confidentially." target="_blank" rel="noopener" class="btn-dark">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+        Chat on WhatsApp
+      </a>
+      <a href="https://www.instagram.com/dxb.deals/" target="_blank" rel="noopener" class="btn-light">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+        DM us on Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS SECTION -->
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="process-head">
+      <div>
+        <div class="sec-kicker" id="processKicker">The Process</div>
+        <h2 id="processTitle">How your business is<br>shared discreetly</h2>
+      </div>
+      <p class="process-head-right" id="processDesc">The goal is to create buyer interest without publicly exposing the business name, exact identity or sensitive details.</p>
+    </div>
+    <div class="process-grid">
+
+      <article class="process-card" id="pc1">
+        <div class="process-num">01</div>
+        <h3>Message us privately</h3>
+        <p>Start with a confidential WhatsApp message or Instagram DM. Tell us what kind of business you want to sell.</p>
+      </article>
+
+      <article class="process-card" id="pc2">
+        <div class="process-num">02</div>
+        <h3>We prepare a discreet listing</h3>
+        <p>We create a short, attractive video or listing without officially showing or naming the business publicly.</p>
+      </article>
+
+      <article class="process-card" id="pc3">
+        <div class="process-num">03</div>
+        <h3>Buyers request details</h3>
+        <p>Interested buyers contact DXB Deals first. We filter serious buyers before anything sensitive is shared.</p>
+      </article>
+
+      <article class="process-card" id="pc4">
+        <div class="process-num">04</div>
+        <h3>Seller introduction</h3>
+        <p>Only when a buyer is qualified and serious do we connect them with the seller for the next step.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONFIDENTIALITY SECTION -->
+<section class="confidential" id="confSection">
+  <div class="wrap">
+    <div class="confidential-card" id="confCard">
+      <div>
+        <div class="conf-kicker">Confidential by Design</div>
+        <h2>Your business stays protected.</h2>
+        <p>Public marketing can be powerful — but only when done carefully. DXB Deals keeps the presentation attractive while avoiding unnecessary exposure.</p>
+      </div>
+      <ul class="conf-list" id="confList">
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          No public shop name without approval
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          No sensitive details shown openly
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          Buyer interest is filtered first
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6 9 17l-5-5"/></svg>
+          Seller introduction only with serious buyers
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta" id="finalCta">
+  <div class="wrap">
+    <h2 id="ctaTitle">Thinking about selling<br>your business?</h2>
+    <p id="ctaDesc">Send a private message and we can tell you what the next step would look like.</p>
+    <div class="final-cta-actions" id="ctaActions">
+      <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20discuss%20selling%20my%20business%20confidentially." target="_blank" rel="noopener" class="btn-cta-dark">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+        Chat on WhatsApp
+      </a>
+      <a href="https://www.instagram.com/dxb.deals/" target="_blank" rel="noopener" class="btn-cta-gold">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+        DM us on Instagram
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <div class="footer-brand">
+      <img src="dxb-logo.png" alt="DXB Deals">
+      <p>Confidential business brokerage across Dubai and the UAE.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="listings.html">Buy a Business</a></li>
+        <li><a href="sell.html">Sell a Business</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Direct Contact</h4>
+      <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20discuss%20selling%20my%20business%20confidentially." target="_blank" rel="noopener" class="footer-wa">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+        Chat on WhatsApp
+      </a>
+    </div>
+  </div>
+  <div class="wrap footer-copy">
+    <p>© <span id="yr"></span> DXB Deals · Confidential Business Brokerage · Dubai, UAE.</p>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* ── Hero animations ── */
+const tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+tl.to('#heroKicker',  { opacity:1, duration:.55, delay:.15 })
+  .to('#heroTitle',   { opacity:1, y:0, duration:.75 }, '-=.25')
+  .to('#heroSub',     { opacity:1, duration:.6 }, '-=.4')
+  .to('.hero-badge',  { opacity:1, y:0, duration:.5, stagger:.09 }, '-=.35')
+  .to('#heroActions', { opacity:1, duration:.5 }, '-=.3');
+
+/* ── Hero parallax ── */
+gsap.to('.hero-bg', {
+  yPercent: 20, ease:'none',
+  scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:true }
+});
+
+/* ── Process section ── */
+gsap.to(['#processKicker','#processTitle','#processDesc'], {
+  opacity:1, y:0, duration:.7, ease:'power2.out', stagger:.1,
+  scrollTrigger:{ trigger:'#process', start:'top 85%', toggleActions:'play none none none' }
+});
+gsap.to(['#pc1','#pc2','#pc3','#pc4'], {
+  opacity:1, y:0, duration:.65, ease:'power2.out', stagger:.12,
+  scrollTrigger:{ trigger:'.process-grid', start:'top 82%', toggleActions:'play none none none' }
+});
+
+/* ── Confidentiality card ── */
+gsap.from('#confCard', {
+  opacity:0, y:36, duration:.8, ease:'power2.out',
+  scrollTrigger:{ trigger:'#confSection', start:'top 82%', toggleActions:'play none none none' }
+});
+gsap.to('#confList li', {
+  opacity:1, x:0, duration:.55, ease:'power2.out', stagger:.12,
+  scrollTrigger:{ trigger:'#confList', start:'top 85%', toggleActions:'play none none none' }
+});
+
+/* ── Final CTA ── */
+gsap.to(['#ctaTitle','#ctaDesc','#ctaActions'], {
+  opacity:1, y:0, duration:.7, ease:'power2.out', stagger:.12,
+  scrollTrigger:{ trigger:'#finalCta', start:'top 85%', toggleActions:'play none none none' }
+});
+
+/* ── Footer year ── */
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+/* ── Reduced motion ── */
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  gsap.globalTimeline.timeScale(0);
+}
+</script>
+</body>
+</html>
