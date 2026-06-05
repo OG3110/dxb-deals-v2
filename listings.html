@@ -444,8 +444,8 @@ const IG_SVG = `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stro
 
 /* ── State ── */
 let allListings = [];
-let activeCat = 'all';
-let activeRange = 'all';
+let activeCats = new Set();   // empty = All
+let activeRanges = new Set(); // empty = All
 let activeSort = 'newest';
 let currentPage = 1;
 
@@ -489,9 +489,14 @@ mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => 
 /* ── Filter logic ── */
 document.querySelectorAll('[data-cat]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeCat = btn.dataset.cat;
+    const val = btn.dataset.cat;
+    if (val === 'all') {
+      activeCats.clear();
+    } else {
+      if (activeCats.has(val)) activeCats.delete(val);
+      else activeCats.add(val);
+    }
+    updateCatButtons();
     currentPage = 1;
     renderWithAnimation();
   });
@@ -499,13 +504,32 @@ document.querySelectorAll('[data-cat]').forEach(btn => {
 
 document.querySelectorAll('[data-range]').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-range]').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    activeRange = btn.dataset.range;
+    const val = btn.dataset.range;
+    if (val === 'all') {
+      activeRanges.clear();
+    } else {
+      if (activeRanges.has(val)) activeRanges.delete(val);
+      else activeRanges.add(val);
+    }
+    updateRangeButtons();
     currentPage = 1;
     renderWithAnimation();
   });
 });
+
+function updateCatButtons() {
+  document.querySelectorAll('[data-cat]').forEach(b => {
+    if (b.dataset.cat === 'all') b.classList.toggle('active', activeCats.size === 0);
+    else b.classList.toggle('active', activeCats.has(b.dataset.cat));
+  });
+}
+
+function updateRangeButtons() {
+  document.querySelectorAll('[data-range]').forEach(b => {
+    if (b.dataset.range === 'all') b.classList.toggle('active', activeRanges.size === 0);
+    else b.classList.toggle('active', activeRanges.has(b.dataset.range));
+  });
+}
 
 document.querySelectorAll('[data-sort]').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -518,9 +542,8 @@ document.querySelectorAll('[data-sort]').forEach(btn => {
 });
 
 function clearFilters() {
-  activeCat = 'all'; activeRange = 'all'; activeSort = 'newest'; currentPage = 1;
-  document.querySelectorAll('[data-cat]').forEach(b => b.classList.toggle('active', b.dataset.cat === 'all'));
-  document.querySelectorAll('[data-range]').forEach(b => b.classList.toggle('active', b.dataset.range === 'all'));
+  activeCats.clear(); activeRanges.clear(); activeSort = 'newest'; currentPage = 1;
+  updateCatButtons(); updateRangeButtons();
   document.querySelectorAll('[data-sort]').forEach(b => b.classList.toggle('sort-active', b.dataset.sort === 'newest'));
   renderWithAnimation();
 }
@@ -528,8 +551,8 @@ function clearFilters() {
 /* ── Filter & sort ── */
 function getFiltered() {
   let list = allListings.filter(l => {
-    if (activeCat !== 'all' && l.category !== activeCat) return false;
-    if (!inRange(l.keyMoney, activeRange)) return false;
+    if (activeCats.size > 0 && !activeCats.has(l.category)) return false;
+    if (activeRanges.size > 0 && !Array.from(activeRanges).some(r => inRange(l.keyMoney, r))) return false;
     return true;
   });
   if (activeSort === 'price-asc')  list = [...list].sort((a,b) => a.keyMoney - b.keyMoney);
@@ -561,7 +584,7 @@ function render() {
   const countEl = document.getElementById('resultsCount');
   const clearEl = document.getElementById('clearBtn');
   countEl.innerHTML = `Showing <b>${total}</b> listing${total !== 1 ? 's' : ''}`;
-  const filtersActive = activeCat !== 'all' || activeRange !== 'all' || activeSort !== 'newest';
+  const filtersActive = activeCats.size > 0 || activeRanges.size > 0 || activeSort !== 'newest';
   clearEl.classList.toggle('visible', filtersActive);
 
   /* Grid */
