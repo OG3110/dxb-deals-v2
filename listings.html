@@ -387,6 +387,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
       <button class="fbtn sort-active" data-sort="newest">Newest First</button>
       <button class="fbtn" data-sort="price-asc">Price ↑</button>
       <button class="fbtn" data-sort="price-desc">Price ↓</button>
+      <button class="fbtn" data-distress id="distressBtn">🔴 Distress Deals</button>
     </div>
   </div>
 </div>
@@ -447,6 +448,7 @@ let allListings = [];
 let activeCats = new Set();   // empty = All
 let activeRanges = new Set(); // empty = All
 let activeSort = 'newest';
+let activeDistress = false;
 let currentPage = 1;
 
 /* ── Helpers ── */
@@ -517,7 +519,12 @@ document.querySelectorAll('[data-range]').forEach(btn => {
   });
 });
 
-function updateCatButtons() {
+document.getElementById('distressBtn').addEventListener('click', () => {
+  activeDistress = !activeDistress;
+  document.getElementById('distressBtn').classList.toggle('active', activeDistress);
+  currentPage = 1;
+  renderWithAnimation();
+});
   document.querySelectorAll('[data-cat]').forEach(b => {
     if (b.dataset.cat === 'all') b.classList.toggle('active', activeCats.size === 0);
     else b.classList.toggle('active', activeCats.has(b.dataset.cat));
@@ -542,9 +549,10 @@ document.querySelectorAll('[data-sort]').forEach(btn => {
 });
 
 function clearFilters() {
-  activeCats.clear(); activeRanges.clear(); activeSort = 'newest'; currentPage = 1;
+  activeCats.clear(); activeRanges.clear(); activeSort = 'newest'; activeDistress = false; currentPage = 1;
   updateCatButtons(); updateRangeButtons();
   document.querySelectorAll('[data-sort]').forEach(b => b.classList.toggle('sort-active', b.dataset.sort === 'newest'));
+  document.getElementById('distressBtn').classList.remove('active');
   renderWithAnimation();
 }
 
@@ -553,6 +561,7 @@ function getFiltered() {
   let list = allListings.filter(l => {
     if (activeCats.size > 0 && !activeCats.has(l.category)) return false;
     if (activeRanges.size > 0 && !Array.from(activeRanges).some(r => inRange(l.keyMoney, r))) return false;
+    if (activeDistress && !l.distress) return false;
     return true;
   });
   if (activeSort === 'price-asc')  list = [...list].sort((a,b) => a.keyMoney - b.keyMoney);
@@ -584,7 +593,7 @@ function render() {
   const countEl = document.getElementById('resultsCount');
   const clearEl = document.getElementById('clearBtn');
   countEl.innerHTML = `Showing <b>${total}</b> listing${total !== 1 ? 's' : ''}`;
-  const filtersActive = activeCats.size > 0 || activeRanges.size > 0 || activeSort !== 'newest';
+  const filtersActive = activeCats.size > 0 || activeRanges.size > 0 || activeSort !== 'newest' || activeDistress;
   clearEl.classList.toggle('visible', filtersActive);
 
   /* Grid */
