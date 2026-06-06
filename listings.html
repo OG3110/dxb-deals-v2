@@ -275,6 +275,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 .footer-nav-sep{color:var(--gold-deep);opacity:.45;font-size:13px;margin:0 10px;user-select:none}
 /* ─── FOOTER ───────────────────────────────────────────────── */
 .footer{background:var(--teal);padding:56px 0 0}
+.footer-nav h4{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.footer-nav-links{display:flex;align-items:center;flex-wrap:wrap;gap:0}
+.footer-nav-links a{font-size:14px;color:rgba(246,242,234,.72);transition:color .18s}
+.footer-nav-links a:hover{color:#fff}
+.footer-nav-sep{color:var(--gold-deep);opacity:.45;font-size:13px;margin:0 10px;user-select:none}
 .footer-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:48px;border-bottom:1px solid rgba(246,242,234,.1)}
 .footer-brand img{height:40px;margin-bottom:14px;opacity:.9}
 .footer-brand p{font-size:13px;color:rgba(246,242,234,.55);max-width:260px;line-height:1.6}
@@ -371,7 +376,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
       <span class="filter-label">Category</span>
       <button class="fbtn active" data-cat="all">All</button>
       <button class="fbtn" data-cat="restaurant">Restaurant</button>
-      <button class="fbtn" data-cat="lounge">Lounge</button>
       <button class="fbtn" data-cat="nightclub">Nightclub</button>
       <button class="fbtn" data-cat="gym">Gym</button>
       <button class="fbtn" data-cat="salon">Salon</button>
@@ -434,7 +438,6 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
       <div class="dchips">
         <button class="dchip active" data-dcat="all">All</button>
         <button class="dchip" data-dcat="restaurant">Restaurant</button>
-        <button class="dchip" data-dcat="lounge">Lounge</button>
         <button class="dchip" data-dcat="nightclub">Nightclub</button>
         <button class="dchip" data-dcat="gym">Gym</button>
         <button class="dchip" data-dcat="salon">Salon</button>
@@ -837,11 +840,6 @@ document.getElementById('grid').addEventListener('click', e => {
   if (img && img.style.display !== 'none') openLightbox(img.src, img.alt);
 });
 
-.footer-nav h4{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-.footer-nav-links{display:flex;align-items:center;flex-wrap:wrap;gap:0}
-.footer-nav-links a{font-size:14px;color:rgba(246,242,234,.72);transition:color .18s}
-.footer-nav-links a:hover{color:#fff}
-.footer-nav-sep{color:var(--gold-deep);opacity:.45;font-size:13px;margin:0 10px;user-select:none}
 /* ─── FOOTER YEAR ─────────────────────────────────── */
 document.getElementById('yr').textContent = new Date().getFullYear();
 
