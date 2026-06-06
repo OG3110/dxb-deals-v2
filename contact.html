@@ -32,21 +32,28 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 /* ─── LAYOUT ───────────────────────────────────────────────── */
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
 
-/* ─── NAV ──────────────────────────────────────────────────── */
-/* ─── NAV ──────────────────────────────────────────────────── */
+
+/* ─── NAV ─────────────────────────────────────────────────── */
 :root{ --nav-h:72px }
-.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(246,242,234,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(228,221,205,.6)}
-.nav-top{display:flex;align-items:center;justify-content:space-between;height:var(--nav-h);padding:0 28px}
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:grid;grid-template-columns:1fr auto 1fr;
+  align-items:center;height:var(--nav-h);padding:0 28px;
+  background:rgba(246,242,234,.92);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(228,221,205,.6);
+}
 .nav-logo{height:44px;width:auto}
-.nav-links{display:flex;align-items:center;gap:36px}
-.nav-links a{font-size:14.5px;font-weight:500;color:var(--ink-soft);position:relative;padding-bottom:2px;transition:color .2s}
+.nav-links{display:flex;align-items:center;gap:4px;justify-self:center}
+.nav-links a{font-size:14.5px;font-weight:500;color:var(--ink-soft);position:relative;padding:4px 10px;transition:color .2s}
 .nav-links a.active{color:var(--teal);font-weight:600}
-.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1.5px;background:var(--gold-deep);transition:width .25s}
-.nav-links a:hover::after,.nav-links a.active::after{width:100%}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:10px;right:10px;height:1.5px;background:var(--gold-deep);width:0;transition:width .25s}
+.nav-links a:hover::after,.nav-links a.active::after{width:calc(100% - 20px)}
 .nav-links a:hover{color:var(--teal)}
+.nav-sep{color:var(--gold-deep);opacity:.4;font-size:13px;font-weight:300;user-select:none;flex-shrink:0}
+.nav-right{display:flex;justify-content:flex-end}
 .nav-wa{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:#fff;font-size:14px;font-weight:600;padding:11px 20px;border-radius:999px;transition:background .2s,transform .2s;white-space:nowrap}
 .nav-wa:hover{background:var(--teal-2);transform:translateY(-1px)}
-
 /* ─── HERO ─────────────────────────────────────────────────── */
 .hero{
   padding:140px 0 80px;
@@ -193,6 +200,11 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 }
 .btn-gold-sm:hover{background:#fff}
 
+.footer-nav h4{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.footer-nav-links{display:flex;align-items:center;flex-wrap:wrap;gap:0}
+.footer-nav-links a{font-size:14px;color:rgba(246,242,234,.72);transition:color .18s}
+.footer-nav-links a:hover{color:#fff}
+.footer-nav-sep{color:var(--gold-deep);opacity:.45;font-size:13px;margin:0 10px;user-select:none}
 /* ─── FOOTER ───────────────────────────────────────────────── */
 .footer{background:var(--teal);padding:56px 0 0}
 .footer-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:48px;flex-wrap:wrap;padding-bottom:48px;border-bottom:1px solid rgba(246,242,234,.1)}
@@ -212,8 +224,15 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 }
 @media(max-width:680px){
   :root{ --nav-h:108px }
-  .wrap,.nav-top{padding-left:18px;padding-right:18px}
-  .nav-links{justify-content:center;gap:0;border-top:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+    .wrap{padding:0 18px}
+  .nav{grid:none;display:flex;flex-wrap:wrap;height:auto;padding:10px 18px 0;align-items:center}
+  .nav>a:first-child{order:1;flex:1}
+  .nav-right{order:2}
+  .nav-links{order:3;width:100%;justify-content:center;border-top:1px solid var(--line);padding:10px 0;overflow-x:auto;scrollbar-width:none;gap:0}
+  .nav-links::-webkit-scrollbar{display:none}
+  .nav-links a{font-size:12.5px;padding:4px 10px;white-space:nowrap}
+  .nav-links a::after{display:none}
+  .nav-sep{display:none}
   .nav-links::-webkit-scrollbar{display:none}
   .nav-links a{font-size:12.5px;padding:10px 14px;white-space:nowrap}
   .nav-links a::after{display:none}
@@ -229,18 +248,21 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
 
 <!-- NAV -->
 <nav class="nav">
-  <div class="nav-top">
-    <a href="index.html"><img src="dxb-logo.png" alt="DXB Deals" class="nav-logo"></a>
+  <a href="index.html"><img src="dxb-logo.png" alt="DXB Deals" class="nav-logo"></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <span class="nav-sep">|</span>
+    <a href="listings.html">Buy a Business</a>
+    <span class="nav-sep">|</span>
+    <a href="sell.html">Sell a Business</a>
+    <span class="nav-sep">|</span>
+    <a href="contact.html" class="active">Contact</a>
+  </div>
+  <div class="nav-right">
     <a href="https://wa.me/971503186047?text=Hello%20Tolga%2C%20I%20would%20like%20to%20speak%20with%20you%20about%20DXB%20Deals." target="_blank" rel="noopener" class="nav-wa">
       <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.2-1.7-.8-2-.9-.3-.1-.5-.2-.6.2-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-1.6-.8-2.6-1.4-3.7-3.2-.3-.5.3-.5.8-1.5.1-.2 0-.3 0-.5 0-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.4-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 2 3.1 5 4.3 1.8.8 2.5.8 3.4.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
       Chat on WhatsApp
     </a>
-  </div>
-  <div class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="listings.html">Buy a Business</a>
-    <a href="sell.html">Sell a Business</a>
-    <a href="contact.html" class="active">Contact</a>
   </div>
 </nav>
 
@@ -348,14 +370,17 @@ button{font-family:inherit;cursor:pointer;border:none;background:none}
       <img src="dxb-logo.png" alt="DXB Deals">
       <p>Confidential business brokerage across Dubai and the UAE.</p>
     </div>
-    <div class="footer-col">
+        <div class="footer-nav">
       <h4>Navigate</h4>
-      <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="listings.html">Buy a Business</a></li>
-        <li><a href="sell.html">Sell a Business</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
+      <div class="footer-nav-links">
+        <a href="index.html">Home</a>
+        <span class="footer-nav-sep">|</span>
+        <a href="listings.html">Buy a Business</a>
+        <span class="footer-nav-sep">|</span>
+        <a href="sell.html">Sell a Business</a>
+        <span class="footer-nav-sep">|</span>
+        <a href="contact.html">Contact</a>
+      </div>
     </div>
     <div class="footer-col">
       <h4>Direct Contact</h4>
