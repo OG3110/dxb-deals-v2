@@ -135,7 +135,7 @@ export function engine(root: HTMLElement, mobile: boolean, paint: Paint) {
     clearTimeout(toastT); toastT = window.setTimeout(() => toastEl.classList.remove('on'), 1800);
   }
   async function share(d: ClientDeal) {
-    const url = `${location.origin}${location.pathname}${location.search}#${d.id}`;
+    const url = `${location.origin}${location.pathname}#${d.id}`;
     const data = { title: `${d.title} – ${d.area} · DXB Deals`, text: `${d.id} · ${d.title} – ${d.area} · AED ${fmtMoney(d.price)}`, url };
     if (mobile && navigator.share) {
       try { await navigator.share(data); return; } catch (e) { if ((e as DOMException)?.name === 'AbortError') return; }
