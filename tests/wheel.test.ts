@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createWheelStepper, normaliseDelta } from '../src/designs/d3-feed-all/wheel';
+import { createWheelStepper, normaliseDelta } from '../src/lib/client/wheel';
 
 const H = 662; // feed height (px)
 const run = (events: [deltaY: number, mode: number, t: number][]) => {
@@ -7,7 +7,7 @@ const run = (events: [deltaY: number, mode: number, t: number][]) => {
   return events.map(([d, m, t]) => s.onWheel(d, m, t, H)).filter(x => x !== 0);
 };
 
-describe('d3 wheel stepper', () => {
+describe('wheel stepper', () => {
   it('a momentum stream of 40 events over 1.2 s is one step', () => {
     // decaying trackpad flick: big deltas first, then a long momentum tail, ~30 ms apart (never idle > 200 ms)
     const ev = Array.from({ length: 40 }, (_, i) => [Math.max(1, Math.round(120 * Math.exp(-i / 10))), 0, 1000 + i * 30] as [number, number, number]);

@@ -7,6 +7,8 @@ let lastFocus: HTMLElement | null = null;
 let isOpen = false;
 
 const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : '');
+/** "Jumeirah, Dubai" — but never "Dubai, Dubai". */
+const place = (d: ClientDeal) => (/^dubai$/i.test(d.area.trim()) ? esc(d.area) : `${esc(d.area)}, Dubai`);
 
 function setClosedA11y(closed: boolean) {
   if (!box) return;
@@ -35,7 +37,7 @@ export function openQuickView(d: ClientDeal, opts: { mobile: boolean; saved: Sav
   box!.className = 'qv ' + (opts.mobile ? 'mob' : 'desk');
   box!.innerHTML = `${opts.mobile ? '<div class="grab"></div>' : `<div class="media">${flyerHTML(d, 'md')}</div>`}
     <div class="body"><button class="x" aria-label="Close">✕</button>
-      <h3>${esc(d.title)}</h3><div class="loc">📍 ${esc(d.area)}, Dubai · ${esc(categoryLabel(d.category))} · ${esc(d.id)}</div>
+      <h3>${esc(d.title)}</h3><div class="loc">📍 ${place(d)} · ${esc(categoryLabel(d.category))} · ${esc(d.id)}</div>
       <div class="kv">
         <div><small>${d.priceType === 'asking' ? 'Asking price' : 'Key money'}</small><b>AED ${fmtMoney(d.price)}</b>${pct ? `<small style="color:#E5484D;text-transform:none">−${pct}% · was AED ${fmtMoney(d.originalPrice)}</small>` : ''}</div>
         <div><small>Rent / year</small><b>${d.annualRent ? 'AED ' + fmtMoney(d.annualRent) : '—'}</b></div>

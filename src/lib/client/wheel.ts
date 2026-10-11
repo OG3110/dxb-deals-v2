@@ -1,4 +1,4 @@
-// Pure wheel-gesture stepper for the desktop feed: exactly one slide per gesture, whatever the input device.
+// Pure wheel-gesture stepper for snap feeds (Designs 3 and 4): exactly one slide per gesture, whatever the input device.
 // A gesture ends only after the wheel has been idle for `idleMs` (every event pushes the end further out, so
 // trackpad momentum belongs to the same gesture). Once a gesture has stepped it is locked and later deltas
 // are discarded. Driven by explicit timestamps so it can be unit-tested without timers.

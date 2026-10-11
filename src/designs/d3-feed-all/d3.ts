@@ -4,7 +4,7 @@ import type { ClientDeal } from '../../lib/deals';
 import { isQuickViewOpen } from '../../lib/client/quickview';
 import { $ } from '../../lib/client/dom';
 import { engine } from './engine';
-import { createWheelStepper } from './wheel';
+import { createWheelStepper } from '../../lib/client/wheel';
 import * as M from './markup';
 
 export { initMobile } from './mobile';
