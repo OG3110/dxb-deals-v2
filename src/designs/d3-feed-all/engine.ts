@@ -29,7 +29,8 @@ export function engine(root: HTMLElement, mobile: boolean, paint: Paint) {
   const saved = createSavedStore();
   const st: State = { q: '', filter: 'all', sort: 'newest', savedOnly: false, mode: 'feed' };
   const feed = $('[data-feed]', root), grid = $('[data-grid]', root);
-  const fromHash = decodeURIComponent(location.hash.slice(1)).toUpperCase();
+  let fromHash = '';
+  try { fromHash = decodeURIComponent(location.hash.slice(1)).trim().toUpperCase(); } catch { /* malformed %-escape: ignore the hash */ }
   let list: ClientDeal[] = [], cur = -1, curId = byId.has(fromHash) ? fromHash : '';
   let target = -1, tid = 0;
 
