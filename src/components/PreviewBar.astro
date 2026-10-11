@@ -39,7 +39,7 @@ const { current } = Astro.props;
   html[data-bar-min] .pv-bar,#pv.min .pv-bar{display:none} html[data-bar-min] .pv-fab,#pv.min .pv-fab{display:block}
   .pv-mbtn,.pv-sheet{display:none}
   html[data-view=mobile] .pv-bar,html[data-view=mobile] .pv-fab{display:none!important}
-  html[data-view=mobile] .pv-mbtn{display:flex;position:fixed;right:12px;top:calc(env(safe-area-inset-top) + var(--pv-mtop, 66px));z-index:1000;width:38px;height:38px;border-radius:50%;align-items:center;justify-content:center;background:rgba(10,20,24,.7);backdrop-filter:blur(12px);color:#F2C94C;border:1px solid rgba(255,255,255,.2);font-size:18px}
+  html[data-view=mobile] .pv-mbtn{display:flex;position:fixed;right:var(--pv-mright, 12px);top:calc(env(safe-area-inset-top) + var(--pv-mtop, 66px));z-index:1000;width:38px;height:38px;border-radius:50%;align-items:center;justify-content:center;background:rgba(10,20,24,.7);backdrop-filter:blur(12px);color:#F2C94C;border:1px solid rgba(255,255,255,.2);font-size:18px}
   html[data-view=mobile] .pv-sheet{display:block;position:fixed;left:0;right:0;bottom:0;z-index:1001;background:#0f1b1f;color:#fff;border-radius:22px 22px 0 0;padding:10px 14px calc(env(safe-area-inset-bottom) + 14px);transform:translateY(105%);transition:transform .3s}
   html[data-view=mobile] #pv.sheet .pv-sheet{transform:none}
   .pv-grab{width:40px;height:5px;border-radius:5px;background:rgba(255,255,255,.3);margin:0 auto 10px}

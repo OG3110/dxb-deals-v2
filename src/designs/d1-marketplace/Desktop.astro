@@ -1,4 +1,121 @@
 ---
-// src/designs/d1-marketplace/Desktop.astro  (replaced in Task 7)
+import './d1.css';
+import { CATEGORIES, WA_GENERAL, WA_SELL, type ClientDeal } from '../../lib/deals';
+import { cardHTML, chipsHTML, ICON, SORTS, BUDGETS, stats } from './markup';
+interface Props { deals: ClientDeal[] }
+const { deals } = Astro.props;
+const s = stats(deals);
+const IG = 'https://www.instagram.com/dxb.deals/';
 ---
-<section style="padding:40px">Design 1 desktop</section>
+<div class="d1 d1-d">
+  <header class="d1-nav">
+    <div class="d1-wrap d1-nav-in">
+      <a href="#top" class="d1-logo" aria-label="DXB Deals – home"><img src="/brand/logo.png" alt="DXB Deals" width="138" height="46" /></a>
+      <nav aria-label="Main">
+        <ul>
+          <li><a href="#d1-results">Buy a business</a></li>
+          <li><a href="#d1-results" data-goto-filter="distress">Distress deals</a></li>
+          <li><a href={WA_SELL} target="_blank" rel="noopener">Sell</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </nav>
+      <a class="d1-btn d1-btn-wa" href={WA_GENERAL} target="_blank" rel="noopener"><Fragment set:html={ICON.wa(18)} />WhatsApp</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="d1-hero">
+      <div class="d1-wrap">
+        <p class="d1-eyebrow d1-up">Business brokerage · Dubai</p>
+        <h1 class="d1-up d1-up2">Buy a <mark>running business</mark> in Dubai</h1>
+        <p class="d1-sub d1-up d1-up3">{s.total} verified opportunities — restaurants, cafés, salons and more. Fully fitted, ready to operate.</p>
+        <form class="d1-search d1-up d1-up4" data-search role="search">
+          <label class="d1-field d1-field-q">
+            <span>Search</span>
+            <span class="d1-qwrap"><Fragment set:html={ICON.search} /><input type="search" data-bind="q" placeholder="Business, area or ID" autocomplete="off" /></span>
+          </label>
+          <label class="d1-field">
+            <span>Category</span>
+            <select data-bind="filter">
+              <option value="all">All categories</option>
+              <option value="distress">🔥 Distress deals</option>
+              {CATEGORIES.map(c => <option value={c.key}>{c.label}</option>)}
+            </select>
+          </label>
+          <label class="d1-field">
+            <span>Budget</span>
+            <select data-bind="budget">{BUDGETS.map(b => <option value={b.key}>{b.label}</option>)}</select>
+          </label>
+          <button class="d1-go" type="submit">Show <span data-count>{s.total}</span> <span data-results-label>results</span></button>
+        </form>
+        <div class="d1-chips d1-up d1-up5" data-chips set:html={chipsHTML(deals, 'all')} />
+        <ul class="d1-trust d1-up d1-up5">
+          <li><b>{s.total}</b> businesses for sale</li>
+          <li><b>{s.distress}</b> distress deals</li>
+          <li>From <b>AED {s.from}</b></li>
+          <li>Direct line to the broker</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="d1-sec" id="d1-results" data-results aria-labelledby="d1-rh">
+      <div class="d1-wrap">
+        <div class="d1-hd">
+          <div>
+            <h2 id="d1-rh"><span data-count>{s.total}</span> <span data-count-label>opportunities</span></h2>
+            <button type="button" class="d1-clear" data-reset data-filtered hidden>Clear all filters</button>
+          </div>
+          <div class="d1-tools">
+            <button type="button" class="d1-savedbtn" data-saved-toggle aria-pressed="false"><Fragment set:html={ICON.heart} /><span>Saved (<span data-saved-count>0</span>)</span></button>
+            <label class="d1-sort"><Fragment set:html={ICON.sort} /><span class="d1-vh">Sort by</span>
+              <select data-bind="sort">{SORTS.map(o => <option value={o.key}>{o.label}</option>)}</select>
+            </label>
+          </div>
+        </div>
+        <div class="d1-grid" data-grid aria-live="polite" set:html={deals.slice(0, 8).map(d => cardHTML(d, false)).join('')} />
+      </div>
+    </section>
+
+    <section class="d1-sell">
+      <div class="d1-wrap d1-sell-in">
+        <div>
+          <h2>Selling your business?</h2>
+          <p>Reach serious buyers discreetly — talk to Tolga in confidence about price, timing and next steps.</p>
+        </div>
+        <a class="d1-btn d1-btn-gold" href={WA_SELL} target="_blank" rel="noopener">Sell confidentially <Fragment set:html={ICON.arrow} /></a>
+      </div>
+    </section>
+
+    <section class="d1-about" id="about" aria-labelledby="d1-ah">
+      <div class="d1-wrap d1-about-in">
+        <img src="/brand/tolga.png" alt="Tolga Keklik" width="280" height="280" loading="lazy" decoding="async" />
+        <div>
+          <p class="d1-eyebrow">About</p>
+          <h2 id="d1-ah">Tolga Keklik – Business broker in Dubai</h2>
+          <p>Tolga connects buyers with fully fitted, running businesses across Dubai — from cafés and salons to restaurants and clubs. Every listing comes with the key numbers up front, and you deal with him directly: documents, viewings and negotiation in one conversation.</p>
+          <div class="d1-about-acts">
+            <a class="d1-btn d1-btn-wa" href={WA_GENERAL} target="_blank" rel="noopener"><Fragment set:html={ICON.wa(18)} />WhatsApp Tolga</a>
+            <a class="d1-btn d1-btn-line" href={IG} target="_blank" rel="noopener"><Fragment set:html={ICON.ig} />@dxb.deals</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="d1-foot">
+    <div class="d1-wrap d1-foot-in">
+      <img src="/brand/logo.png" alt="DXB Deals" width="114" height="38" loading="lazy" />
+      <span>© 2026 DXB DEALS · Dubai, UAE</span>
+      <a href={IG} target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  import { initDesktop } from './d1';
+  const wrap = document.querySelector<HTMLElement>('[data-version=desktop]');
+  if (wrap) {
+    if (document.documentElement.dataset.view === 'desktop') initDesktop(wrap.querySelector<HTMLElement>('.d1-d')!);
+    else wrap.remove(); // inactive version: drop it so only one set of [data-deal-id] cards exists
+  }
+</script>
