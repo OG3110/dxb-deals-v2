@@ -1,0 +1,25 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import PreviewBar from '../components/PreviewBar.astro';
+import { DESIGNS } from '../designs/registry';
+import { loadDeals } from '../lib/load';
+import D1Desktop from '../designs/d1-marketplace/Desktop.astro';
+import D1Mobile from '../designs/d1-marketplace/Mobile.astro';
+// Tasks 8–11 add: import D2Desktop/D2Mobile … D5Desktop/D5Mobile
+
+export function getStaticPaths() { return DESIGNS.map(d => ({ params: { n: String(d.n) } })); }
+const n = Number(Astro.params.n);
+const info = DESIGNS[n - 1];
+const deals = await loadDeals();
+const parts: Record<number, [any, any]> = { 1: [D1Desktop, D1Mobile] };
+const [Desk, Mob] = parts[n] ?? [null, null];
+---
+<BaseLayout title={`DXB Deals – Design ${n}: ${info.name}`} deals={deals} fonts={info.fonts} bodyClass={`design-${n}`}>
+  <script is:inline>(function(){var q=new URLSearchParams(location.search).get('view');var v=q==='mobile'||q==='desktop'?q:(innerWidth<768?'mobile':'desktop');document.documentElement.dataset.view=v;})();</script>
+  <style is:global>html[data-view=desktop] [data-version=mobile],html[data-view=mobile] [data-version=desktop]{display:none!important}</style>
+  {Desk ? <>
+    <div data-version="desktop"><Desk deals={deals} /></div>
+    <div data-version="mobile"><Mob deals={deals} /></div>
+  </> : <p style="padding:40px;font-family:sans-serif">Design {n} – coming next.</p>}
+  <PreviewBar current={n} />
+</BaseLayout>
