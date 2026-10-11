@@ -38,11 +38,11 @@ export function initDesktop(root: HTMLElement): void {
       closeOverlay(false);
       app.jump(id, fromGrid);
     },
-    afterReset(inLayer) {
-      // A reset inside the overview (e.g. "Browse all deals" in an empty Saved view) stays there: the page behind is
-      // inert. A reset of the flyer column returns to the search field when it is open.
-      if (inLayer || !ov.hidden) { if (!ov.hidden) $('[data-ov-close]', ov).focus(); return; } // the pressed button is gone
-      if (!sf.hidden) q.focus();
+    afterReset(scope) {
+      // A reset inside the overview (e.g. "Browse all deals" in an empty Saved view) stays there and leaves the column
+      // and the search behind it alone; the pressed button is gone, so focus moves to the now pressed "All" chip.
+      if (scope === 'grid') { if (!ov.hidden) $('[data-filter=all]', ov).focus(); return; }
+      if (!sf.hidden) q.focus(); // the column's "Reset filters" returns to the search field when it is open
     },
   });
 

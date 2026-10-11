@@ -14,10 +14,12 @@ export interface Paint {
   current(d: ClientDeal | null, i: number, list: ClientDeal[]): void;
   /** A search row / grid card was chosen: close the layer it lives in, then call app.jump(id, fromGrid). */
   open(id: string, fromGrid: boolean): void;
-  /** After a reset; `inLayer` = the reset button sat inside an overlay / sheet. */
-  afterReset?(inLayer: boolean): void;
+  /** After a reset. `scope`: 'page' = the column's empty state, 'search' = the search sheet (whose state is the
+   *  column query), 'grid' = the All / Saved overview (only its own filter was reset). */
+  afterReset?(scope: ResetScope): void;
 }
 export type App = ReturnType<typeof engine>;
+export type ResetScope = 'page' | 'search' | 'grid';
 
 export const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 /** Swap the content of an animated block (restarts the CSS entrance animation; no-op styling under reduced motion). */
@@ -156,10 +158,12 @@ export function engine(root: HTMLElement, mobile: boolean, paint: Paint) {
   }
   /** Back to the full list, staying on the deal being looked at. */
   function clearFeed() { st.q = ''; st.ff = 'all'; syncQ(); renderFeed(); renderRows(); }
-  function reset(inLayer: boolean) {
-    st.q = ''; st.ff = 'all'; st.filter = 'all'; st.savedOnly = false;
-    syncQ(); renderFeed(); renderRows(); renderGrid();
-    paint.afterReset?.(inLayer);
+  /** A reset only touches the state of the place it was pressed in: the overview resets its own filter and never
+   *  the column behind it; the column's empty state (or the search sheet) resets the column query / filter. */
+  function reset(scope: ResetScope) {
+    if (scope === 'grid') { st.filter = 'all'; st.savedOnly = false; renderGrid(); }
+    else { st.q = ''; st.ff = 'all'; syncQ(); renderFeed(); renderRows(); }
+    paint.afterReset?.(scope);
   }
 
   /* ---------- delegated controls ---------- */
@@ -185,7 +189,10 @@ export function engine(root: HTMLElement, mobile: boolean, paint: Paint) {
     if ((v = pick('[data-goto]', 'goto')) != null) return go(Number(v));
     if ((v = pick('[data-filter]', 'filter'))) { st.filter = v as Filter; st.savedOnly = false; return renderGrid(); }
     if (t.closest('[data-saved-toggle]')) { st.savedOnly = !st.savedOnly; return renderGrid(); }
-    if (t.closest('[data-reset]')) return reset(!!t.closest('[data-layer]'));
+    if (t.closest('[data-reset]')) {
+      const layer = t.closest<HTMLElement>('[data-layer]')?.dataset.layer;
+      return reset(layer === 'grid' || layer === 'search' ? layer : 'page');
+    }
     if (t.closest('[data-clear-feed]')) return clearFeed();
     if ((v = pick('[data-save]', 'save'))) { saved.toggle(v); return; }
     if ((v = pick('[data-details]', 'details'))) { const d = byId.get(v); if (d) openQuickView(d, { mobile, saved }); return; }

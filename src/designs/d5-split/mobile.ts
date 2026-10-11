@@ -38,11 +38,12 @@ export function initMobile(root: HTMLElement): void {
       close(false);
       app.jump(id, fromGrid);
     },
-    afterReset(inLayer) {
-      if (!inLayer) return;
-      if (open === 'saved') show('all'); // "Browse all deals" from the empty Saved sheet
-      else if (open === 'search') q.focus({ preventScroll: true });
-      else if (open) $('[data-sheet-x]', gs).focus({ preventScroll: true }); // the pressed button is gone
+    afterReset(scope) {
+      if (scope === 'search') { if (open === 'search') q.focus({ preventScroll: true }); return; }
+      if (scope !== 'grid') return;
+      // Overview reset: the column and the search behind it are untouched; the pressed button is gone.
+      if (open === 'saved') show('all'); // "Browse all deals" from the empty Saved sheet (focuses the close button)
+      else if (open) $('[data-filter=all]', gs).focus({ preventScroll: true });
     },
   });
 
