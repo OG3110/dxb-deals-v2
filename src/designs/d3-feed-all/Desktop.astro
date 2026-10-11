@@ -1,0 +1,77 @@
+---
+import './d3.css';
+import { WA_GENERAL, type ClientDeal } from '../../lib/deals';
+import * as M from './markup';
+interface Props { deals: ClientDeal[] }
+const { deals } = Astro.props;
+const s = M.stats(deals);
+// Server first paint: first 3 feed slides + first 12 grid cards (newest first); the client rebuilds both on init.
+const slides = deals.slice(0, 3).map((d, i) => M.slideHTML(d, i, deals.length)).join('');
+const cards = deals.slice(0, 12).map(d => M.cardHTML(d, false)).join('');
+---
+<div class="d3 d3-d" data-state="feed">
+  <h1 class="d3-vh">DXB Deals – {s.total} businesses for sale in Dubai</h1>
+  <header class="d3-top">
+    <a href="/design-3/" class="d3-logo" aria-label="DXB Deals – start"><img src="/brand/logo.png" alt="DXB Deals" width="120" height="40" /></a>
+    <form class="d3-search" role="search" autocomplete="off" data-search>
+      <label>
+        <Fragment set:html={M.ICON.search(19)} />
+        <span class="d3-vh">Search businesses, areas or IDs</span>
+        <input type="search" data-bind="q" placeholder="Search business, area or ID — e.g. “Jumeirah”, “café”, “DXB011”" autocomplete="off" spellcheck="false" aria-keyshortcuts="Control+K Meta+K /" />
+      </label>
+      <kbd data-kbd aria-hidden="true">Ctrl K</kbd>
+    </form>
+    <div class="d3-tg" role="group" aria-label="View">
+      <button type="button" data-mode="feed" aria-pressed="true"><Fragment set:html={M.ICON.play} />Feed</button>
+      <button type="button" data-mode="all" aria-pressed="false"><Fragment set:html={M.ICON.grid} />All <span class="d3-tg-n" data-count>{s.total}</span></button>
+    </div>
+    <a class="d3-hwa" href={WA_GENERAL} target="_blank" rel="noopener"><Fragment set:html={M.ICON.wa(18)} />WhatsApp</a>
+  </header>
+
+  <div class="d3-chipsrow">
+    <div class="d3-chips" role="group" aria-label="Category" set:html={M.chipsHTML(deals)} />
+    <span class="d3-sep" aria-hidden="true"></span>
+    <Fragment set:html={M.savedChipHTML()} />
+  </div>
+  <p class="d3-vh" data-heading aria-live="polite" aria-atomic="true">{M.headingText(s.total, false)}</p>
+
+  <main class="d3-body">
+    <section class="d3-feedv" data-feedv aria-label="Feed">
+      <aside class="d3-info" data-info aria-label="Current deal" set:html={deals[0] ? M.infoHTML(deals[0], false) : ''} />
+      <div class="d3-ph">
+        <span class="d3-cnt" data-cnt>1 / {s.total}</span>
+        <div class="d3-feed" data-feed tabindex="-1" aria-label="Deal feed – scroll or use the arrow keys" set:html={slides} />
+      </div>
+      <aside class="d3-next" aria-labelledby="d3-nh">
+        <div class="d3-next-hd">
+          <h2 id="d3-nh">Up next</h2>
+          <div class="d3-nav">
+            <button type="button" data-prev aria-label="Previous deal" disabled><Fragment set:html={M.ICON.up} /></button>
+            <button type="button" data-nextbtn aria-label="Next deal"><Fragment set:html={M.ICON.down} /></button>
+          </div>
+        </div>
+        <div data-next set:html={M.nextHTML(deals.slice(1, 6))} />
+        <p class="d3-hint"><kbd>↑</kbd> <kbd>↓</kbd> browse · <kbd>/</kbd> search</p>
+      </aside>
+      <div class="d3-emptyv" data-empty></div>
+    </section>
+
+    <section class="d3-allv" data-allv aria-labelledby="d3-ah" hidden>
+      <div class="d3-ah">
+        <h2 id="d3-ah" data-heading>{M.headingText(s.total, false)}</h2>
+        <label class="d3-sort"><span>Sort by</span><select data-sort set:html={M.sortOptionsHTML()} /></label>
+      </div>
+      <div class="d3-grid" data-grid set:html={cards} />
+      <div data-empty></div>
+    </section>
+  </main>
+</div>
+
+<script>
+  import { initDesktop } from './d3';
+  const wrap = document.querySelector<HTMLElement>('[data-version=desktop]');
+  if (wrap) {
+    if (document.documentElement.dataset.view === 'desktop') initDesktop(wrap.querySelector<HTMLElement>('.d3-d')!);
+    else wrap.remove(); // inactive version: drop it so only one set of [data-deal-id] elements exists
+  }
+</script>

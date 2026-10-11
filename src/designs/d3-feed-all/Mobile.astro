@@ -1,0 +1,70 @@
+---
+import './d3.css';
+import { WA_GENERAL, type ClientDeal } from '../../lib/deals';
+import * as M from './markup';
+interface Props { deals: ClientDeal[] }
+const { deals } = Astro.props;
+const s = M.stats(deals);
+// Server first paint: first 3 feed slides + first 12 grid cards (newest first); the client rebuilds both on init.
+const slides = deals.slice(0, 3).map((d, i) => M.mslideHTML(d, i, deals.length, false)).join('');
+const cards = deals.slice(0, 12).map(d => M.mcardHTML(d, false)).join('');
+---
+<div class="d3 d3-m" data-state="feed">
+  <h1 class="d3-vh">DXB Deals – {s.total} businesses for sale in Dubai</h1>
+  <div class="d3-page" data-page>
+    <div class="d3-stage" data-stage>
+      <div class="d3-mfeed" data-feed tabindex="-1" aria-label="Deal feed – swipe up for the next deal, double-tap a flyer to save" set:html={slides} />
+      <div class="d3-mempty" data-empty></div>
+    </div>
+
+    <header class="d3-mtop d3-glass">
+      <button type="button" class="d3-trig" data-trigger aria-haspopup="dialog">
+        <Fragment set:html={M.ICON.search(18)} /><span class="d3-vh">Search: </span><span class="d3-trig-tx" data-trigger-text>Search deals</span>
+      </button>
+      <div class="d3-seg" role="group" aria-label="View">
+        <button type="button" data-mode="feed" aria-pressed="true">Feed</button>
+        <button type="button" data-mode="all" aria-pressed="false">All<small data-count>{s.total}</small></button>
+      </div>
+    </header>
+
+    <section class="d3-mall" data-allsheet aria-labelledby="d3-mah" hidden inert>
+      <div class="d3-mchips" role="group" aria-label="Category">
+        <Fragment set:html={M.chipsHTML(deals)} /><Fragment set:html={M.savedChipHTML()} />
+      </div>
+      <div class="d3-mmeta">
+        <h2 id="d3-mah" data-heading aria-live="polite" aria-atomic="true">{M.headingText(s.total, false)}</h2>
+        <label><span class="d3-vh">Sort by</span><select data-sort set:html={M.sortOptionsHTML()} /></label>
+      </div>
+      <div class="d3-mall-sc" data-scroll>
+        <div class="d3-mgrid" data-grid set:html={cards} />
+        <div data-empty></div>
+        <a class="d3-mwa" href={WA_GENERAL} target="_blank" rel="noopener"><Fragment set:html={M.ICON.wa(18)} />Questions? WhatsApp Tolga</a>
+      </div>
+    </section>
+  </div>
+
+  <div class="d3-ss" data-ss role="dialog" aria-modal="true" aria-label="Search" aria-hidden="true" hidden>
+    <div class="d3-ss-top">
+      <form class="d3-ss-f" data-ss-form role="search" autocomplete="off">
+        <label><Fragment set:html={M.ICON.search(19)} /><span class="d3-vh">Search businesses, areas or IDs</span>
+          <input type="search" data-bind="q" placeholder="Business, area or ID" enterkeyhint="search" autocomplete="off" spellcheck="false" />
+        </label>
+      </form>
+      <button type="button" class="d3-ss-x" data-ss-close>Cancel</button>
+    </div>
+    <h2 id="d3-ssh" class="d3-ss-h" data-heading aria-live="polite" aria-atomic="true">{M.headingText(s.total, false)}</h2>
+    <div class="d3-ss-body" data-ss-list></div>
+    <div class="d3-ss-foot"><button type="button" data-ss-show>Show <span data-count>{s.total}</span> in feed</button></div>
+  </div>
+
+  <div class="d3-toast" data-toast role="status"></div>
+</div>
+
+<script>
+  import { initMobile } from './d3';
+  const wrap = document.querySelector<HTMLElement>('[data-version=mobile]');
+  if (wrap) {
+    if (document.documentElement.dataset.view === 'mobile') initMobile(wrap.querySelector<HTMLElement>('.d3-m')!);
+    else wrap.remove(); // inactive version: drop it so only one set of [data-deal-id] elements exists
+  }
+</script>
