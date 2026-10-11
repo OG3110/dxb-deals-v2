@@ -15,7 +15,8 @@ const parts: Record<number, [any, any]> = { 1: [D1Desktop, D1Mobile] };
 const [Desk, Mob] = parts[n] ?? [null, null];
 ---
 <BaseLayout title={`DXB Deals – Design ${n}: ${info.name}`} deals={deals} fonts={info.fonts} bodyClass={`design-${n}`}>
-  <script is:inline>(function(){var q=new URLSearchParams(location.search).get('view');var v=q==='mobile'||q==='desktop'?q:(innerWidth<768?'mobile':'desktop');document.documentElement.dataset.view=v;})();</script>
+  {/* Mirrors pickView() (src/lib/client/view.ts) — inlined so data-view / data-frame / data-bar-min are set before first paint. */}
+  <script is:inline>(function(){var h=document.documentElement,p=new URLSearchParams(location.search),q=p.get('view');h.dataset.view=q==='mobile'||q==='desktop'?q:(innerWidth<768?'mobile':'desktop');if(p.get('frame')==='1')h.dataset.frame='1';try{if(sessionStorage.getItem('dxb:bar')==='min')h.setAttribute('data-bar-min','')}catch(e){}})();</script>
   <style is:global>html[data-view=desktop] [data-version=mobile],html[data-view=mobile] [data-version=desktop]{display:none!important}</style>
   {Desk ? <>
     <div data-version="desktop"><Desk deals={deals} /></div>

@@ -50,7 +50,7 @@ export function openQuickView(d: ClientDeal, opts: { mobile: boolean; saved: Sav
   });
   setClosedA11y(false);
   closeBtn.focus();
-  requestAnimationFrame(() => { dim!.classList.add('on'); box!.classList.add('on'); });
+  requestAnimationFrame(() => { if (!isOpen) return; dim!.classList.add('on'); box!.classList.add('on'); });
 }
 export function closeQuickView(): void {
   dim?.classList.remove('on'); box?.classList.remove('on');

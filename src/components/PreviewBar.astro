@@ -36,10 +36,10 @@ const { current } = Astro.props;
   .pv-dev.on{background:rgba(255,255,255,.16)}
   .pv-min{width:28px;height:28px;border-radius:50%;color:#fff}
   .pv-fab{position:fixed;right:16px;bottom:16px;z-index:1000;width:44px;height:44px;border-radius:50%;background:rgba(10,20,24,.8);color:#fff;display:none}
-  #pv.min .pv-bar{display:none} #pv.min .pv-fab{display:block}
+  html[data-bar-min] .pv-bar,#pv.min .pv-bar{display:none} html[data-bar-min] .pv-fab,#pv.min .pv-fab{display:block}
   .pv-mbtn,.pv-sheet{display:none}
   html[data-view=mobile] .pv-bar,html[data-view=mobile] .pv-fab{display:none!important}
-  html[data-view=mobile] .pv-mbtn{display:flex;position:fixed;right:12px;top:calc(env(safe-area-inset-top) + 66px);z-index:1000;width:38px;height:38px;border-radius:50%;align-items:center;justify-content:center;background:rgba(10,20,24,.7);backdrop-filter:blur(12px);color:#F2C94C;border:1px solid rgba(255,255,255,.2);font-size:18px}
+  html[data-view=mobile] .pv-mbtn{display:flex;position:fixed;right:12px;top:calc(env(safe-area-inset-top) + var(--pv-mtop, 66px));z-index:1000;width:38px;height:38px;border-radius:50%;align-items:center;justify-content:center;background:rgba(10,20,24,.7);backdrop-filter:blur(12px);color:#F2C94C;border:1px solid rgba(255,255,255,.2);font-size:18px}
   html[data-view=mobile] .pv-sheet{display:block;position:fixed;left:0;right:0;bottom:0;z-index:1001;background:#0f1b1f;color:#fff;border-radius:22px 22px 0 0;padding:10px 14px calc(env(safe-area-inset-bottom) + 14px);transform:translateY(105%);transition:transform .3s}
   html[data-view=mobile] #pv.sheet .pv-sheet{transform:none}
   .pv-grab{width:40px;height:5px;border-radius:5px;background:rgba(255,255,255,.3);margin:0 auto 10px}
@@ -57,14 +57,13 @@ const { current } = Astro.props;
 <script>
   const root = document.getElementById('pv')!;
   const n = root.dataset.current;
-  if (new URLSearchParams(location.search).get('frame') === '1') document.documentElement.dataset.frame = '1';
   // Preserve the view param on design links only if it was set explicitly.
   const explicit = new URLSearchParams(location.search).get('view');
   if (explicit === 'mobile' || explicit === 'desktop') {
     root.querySelectorAll<HTMLAnchorElement>('a.pv-n, a.pv-row:not(.pv-desk)').forEach(a => { a.href = `${a.getAttribute('href')}?view=${explicit}`; });
   }
   try { if (sessionStorage.getItem('dxb:bar') === 'min') root.classList.add('min'); } catch {}
-  const setMin = (m: boolean) => { root.classList.toggle('min', m); try { sessionStorage.setItem('dxb:bar', m ? 'min' : 'open'); } catch {} };
+  const setMin = (m: boolean) => { root.classList.toggle('min', m); document.documentElement.toggleAttribute('data-bar-min', m); try { sessionStorage.setItem('dxb:bar', m ? 'min' : 'open'); } catch {} };
   root.querySelector('.pv-min')!.addEventListener('click', () => setMin(true));
   root.querySelector('.pv-fab')!.addEventListener('click', () => setMin(false));
   const frame = root.querySelector('.pv-frame')!, iframe = frame.querySelector('iframe')!;
@@ -75,6 +74,6 @@ const { current } = Astro.props;
     else closeFrame();
   }));
   frame.querySelector('.pv-x')!.addEventListener('click', closeFrame);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeFrame(); root.classList.remove('sheet'); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (root.classList.contains('frame')) closeFrame(); root.classList.remove('sheet'); } });
   root.querySelector('.pv-mbtn')!.addEventListener('click', () => root.classList.toggle('sheet'));
 </script>
