@@ -62,7 +62,7 @@ const IG = 'https://www.instagram.com/dxb.deals/';
       <div class="d1-wrap">
         <div class="d1-hd">
           <div>
-            <h2 id="d1-rh"><span data-count>{s.total}</span> <span data-count-label>opportunities</span></h2>
+            <h2 id="d1-rh" aria-live="polite" aria-atomic="true"><span data-count>{s.total}</span> <span data-count-label>opportunities</span></h2>
             <button type="button" class="d1-clear" data-reset data-filtered hidden>Clear all filters</button>
           </div>
           <div class="d1-tools">
@@ -72,7 +72,7 @@ const IG = 'https://www.instagram.com/dxb.deals/';
             </label>
           </div>
         </div>
-        <div class="d1-grid" data-grid aria-live="polite" set:html={deals.slice(0, 8).map(d => cardHTML(d, false)).join('')} />
+        <div class="d1-grid" data-grid set:html={deals.slice(0, 8).map(d => cardHTML(d, false)).join('')} />
       </div>
     </section>
 

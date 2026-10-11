@@ -30,11 +30,11 @@ const IG = 'https://www.instagram.com/dxb.deals/';
 
     <section id="d1-mresults" data-results aria-labelledby="d1-mrh">
       <div class="d1-mhd">
-        <h2 id="d1-mrh"><span data-count>{s.total}</span> <span data-count-label>opportunities</span></h2>
+        <h2 id="d1-mrh" aria-live="polite" aria-atomic="true"><span data-count>{s.total}</span> <span data-count-label>opportunities</span></h2>
         <button type="button" class="d1-msort" data-sheet-open><Fragment set:html={ICON.sort} /><span data-sort-label>Newest</span></button>
       </div>
       <button type="button" class="d1-clear d1-mclear" data-reset data-filtered hidden>Clear all filters</button>
-      <div class="d1-mlist" data-grid aria-live="polite" set:html={deals.slice(0, 8).map(d => cardHTML(d, false, true)).join('')} />
+      <div class="d1-mlist" data-grid set:html={deals.slice(0, 8).map(d => cardHTML(d, false, true)).join('')} />
     </section>
 
     <section class="d1-msell">

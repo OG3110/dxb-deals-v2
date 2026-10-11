@@ -48,7 +48,9 @@ function engine(root: HTMLElement, mobile: boolean, onRender: (count: number) =>
   function render() {
     const list = results();
     grid.innerHTML = list.length ? list.map(d => cardHTML(d, saved.has(d.id), mobile)).join('') : emptyHTML(st.savedOnly, savedCount());
-    if (chips) chips.innerHTML = chipsHTML(deals, st.filter);
+    // Chips are updated in place (never rebuilt) so keyboard focus and the mobile row's scroll position survive.
+    if (chips && !chips.querySelector('[data-filter]')) chips.innerHTML = chipsHTML(deals, st.filter);
+    $$('[data-filter]', root).forEach(c => c.setAttribute('aria-pressed', String(c.dataset.filter === st.filter)));
     $$('[data-count]', root).forEach(el => { el.textContent = String(list.length); });
     $$('[data-count-label]', root).forEach(el => { el.textContent = list.length === 1 ? 'opportunity' : 'opportunities'; });
     $$('[data-results-label]', root).forEach(el => { el.textContent = list.length === 1 ? 'result' : 'results'; });
