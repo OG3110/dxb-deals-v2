@@ -1,6 +1,43 @@
 ---
 import BaseLayout from '../components/BaseLayout.astro';
+import { DESIGNS } from '../designs/registry';
 import { loadDeals } from '../lib/load';
 const deals = await loadDeals();
 ---
-<BaseLayout title="DXB Deals – Preview" deals={deals}><p>{deals.length} deals · first {deals[0].id} · {deals[0].slug}</p></BaseLayout>
+<BaseLayout title="DXB Deals – Design preview" fonts="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap">
+  <main class="lp">
+    <header><img src="/brand/logo.png" alt="DXB Deals" height="36" /><p>Design preview · {deals.length} live listings · not public</p></header>
+    <h1>Choose a design</h1>
+    <p class="sub">Each design works on desktop and phone. Open it on your phone to see the mobile version, or use “📱 Handy” in the preview bar.</p>
+    <div class="grid">
+      {DESIGNS.map(d => (
+        <a class="card" href={`/design-${d.n}/`}>
+          <div class="shots">
+            <img class="desk" src={`/previews/d${d.n}-desktop.webp`} alt={`${d.name} desktop`} loading="lazy" />
+            <img class="mob" src={`/previews/d${d.n}-mobile.webp`} alt={`${d.name} mobile`} loading="lazy" />
+          </div>
+          <div class="meta"><b>{d.n}</b><div><h2>{d.name}</h2><p>{d.blurb}</p></div></div>
+        </a>
+      ))}
+    </div>
+  </main>
+</BaseLayout>
+<style>
+  .lp{min-height:100vh;background:radial-gradient(900px 600px at 80% 0%,#1B4A55,#06161B 70%);color:#F4F7F8;font-family:'Plus Jakarta Sans',sans-serif;padding:32px 24px 60px}
+  header{display:flex;align-items:center;gap:14px;opacity:.9}
+  header p{margin:0;font-size:13px;opacity:.7}
+  h1{font-size:40px;margin:40px 0 8px;font-weight:800}
+  .sub{opacity:.7;max-width:640px;margin:0 0 28px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+  .card{display:block;border-radius:22px;overflow:hidden;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);transition:transform .25s,border-color .25s}
+  .card:hover{transform:translateY(-4px);border-color:#F2C94C}
+  .shots{position:relative;aspect-ratio:16/10;overflow:hidden;background:#0b1f25}
+  .desk{width:100%;height:100%;object-fit:cover;object-position:top}
+  .mob{position:absolute;right:14px;bottom:-30px;width:28%;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.5);border:3px solid #0b1f25}
+  .meta{display:flex;gap:14px;padding:16px 18px}
+  .meta b{flex:0 0 36px;height:36px;border-radius:50%;background:#F2C94C;color:#0B1F25;display:flex;align-items:center;justify-content:center}
+  .meta h2{margin:0;font-size:18px}
+  .meta p{margin:4px 0 0;font-size:13px;opacity:.7}
+  @media (max-width:600px){h1{font-size:30px}}
+  @media (prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+</style>
