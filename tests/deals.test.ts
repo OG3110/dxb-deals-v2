@@ -17,6 +17,11 @@ describe('fmtMoney / fmtSize', () => {
     expect(fmtMoney(6800000)).toBe('6.8M');
     expect(fmtMoney(null)).toBe('—');
   });
+  it('rolls 999.5K and above over to 1M', () => {
+    expect(fmtMoney(999499)).toBe('999K');
+    expect(fmtMoney(999500)).toBe('1M');
+    expect(fmtMoney(999999)).toBe('1M');
+  });
   it('formats size', () => {
     expect(fmtSize(29900)).toBe('29,900 sqft');
     expect(fmtSize(null)).toBe('—');
@@ -31,6 +36,19 @@ describe('search', () => {
     expect(parseQuery('under 1M')).toEqual({ words: [], maxPrice: 1000000 });
     expect(parseQuery('restaurant under 500k')).toEqual({ words: ['restaurant'], maxPrice: 500000 });
     expect(parseQuery('below 2.5m jumeirah')).toEqual({ words: ['jumeirah'], maxPrice: 2500000 });
+  });
+  it('parses thousands separators, long units and decimals', () => {
+    expect(parseQuery('under 500,000')).toEqual({ words: [], maxPrice: 500000 });
+    expect(parseQuery('under 1 million')).toEqual({ words: [], maxPrice: 1000000 });
+    expect(parseQuery('restaurant under 2.5 mio')).toEqual({ words: ['restaurant'], maxPrice: 2500000 });
+    expect(parseQuery('max 300 thousand')).toEqual({ words: [], maxPrice: 300000 });
+  });
+  it('does not treat words that merely contain "under" as a price filter', () => {
+    expect(parseQuery('thunder 5')).toEqual({ words: ['thunder', '5'], maxPrice: null });
+  });
+  it('matches Café regardless of accent and case', () => {
+    expect(matchDeal(cafe, 'Café', 'all')).toBe(true);
+    expect(matchDeal(cafe, 'CAFE', 'all')).toBe(true);
   });
   it('matches accent-insensitive, multi-word, id and category label', () => {
     expect(matchDeal(cafe, 'cafe', 'all')).toBe(true);

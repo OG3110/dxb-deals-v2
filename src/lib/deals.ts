@@ -31,7 +31,7 @@ export function legacyCategory(title: string, legacy: string): Category {
 
 export function fmtMoney(n: number | null): string {
   if (n == null) return '—';
-  if (n >= 1e6) return (Math.round(n / 1e5) / 10).toString().replace(/\.0$/, '') + 'M';
+  if (n >= 999_500) return (Math.round(n / 1e5) / 10).toString().replace(/\.0$/, '') + 'M';
   return Math.round(n / 1e3) + 'K';
 }
 export function fmtSize(n: number | null): string {
@@ -50,10 +50,11 @@ export interface ParsedQuery { words: string[]; maxPrice: number | null }
 export function parseQuery(q: string): ParsedQuery {
   let s = norm(q);
   let maxPrice: number | null = null;
-  const m = s.match(/(?:under|below|max|<)\s*([\d.]+)\s*(m|k)?\b/);
+  const m = s.match(/(?:\b(?:under|below|max)|<)\s*(\d[\d,]*(?:\.\d+)?)\s*(million|mio|m|thousand|k)?\b/);
   if (m) {
-    const n = parseFloat(m[1]);
-    maxPrice = m[2] === 'k' ? n * 1e3 : m[2] === 'm' ? n * 1e6 : n;
+    const n = parseFloat(m[1].replace(/,/g, ''));
+    const unit = m[2];
+    maxPrice = !unit ? n : unit[0] === 'm' ? n * 1e6 : n * 1e3;
     s = s.replace(m[0], ' ');
   }
   return { words: s.split(' ').filter(Boolean), maxPrice };
