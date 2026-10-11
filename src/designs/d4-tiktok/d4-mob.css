@@ -33,7 +33,7 @@
 .d4-mcap-u { display: flex; align-items: center; gap: 7px; margin: 0 0 5px; font-size: 13px; font-weight: 700; }
 .d4-mlogo {
   flex: none; width: 24px; height: 24px; border-radius: 50%;
-  background: #12303A url(/brand/logo.png) center / 190% no-repeat; border: 1.5px solid var(--gold);
+  background: #12303A url(/brand/logo.webp) center / 190% no-repeat; border: 1.5px solid var(--gold);
 }
 .d4-mcap-u small {
   margin-left: auto; padding: 3px 8px; border-radius: 999px; background: var(--glass2);
@@ -58,7 +58,7 @@
   display: flex; flex-direction: column; align-items: center; gap: 11px; padding: 10px 5px; border-radius: 999px;
 }
 .d4-me { position: relative; width: 42px; height: 42px; margin-bottom: 5px; }
-.d4-me b { display: block; width: 42px; height: 42px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .85); background: #fff url(/brand/tolga.png) 50% 14% / 230% no-repeat; }
+.d4-me b { display: block; width: 42px; height: 42px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .85); background: #fff url(/brand/tolga.webp) 50% 14% / 230% no-repeat; }
 .d4-me::after {
   content: '+'; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
   width: 18px; height: 18px; border-radius: 50%; background: var(--gold); color: var(--gold-ink);
@@ -89,7 +89,7 @@
 }
 .d4-mlg {
   flex: none; width: 36px; height: 36px; border-radius: 50%;
-  background: #12303A url(/brand/logo.png) center / 190% no-repeat; border: 1.5px solid var(--gold);
+  background: #12303A url(/brand/logo.webp) center / 190% no-repeat; border: 1.5px solid var(--gold);
 }
 .d4-seg { flex: 1; min-width: 0; display: flex; justify-content: center; gap: 1px; }
 .d4-segb {

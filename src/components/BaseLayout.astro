@@ -17,7 +17,7 @@ const safeJson = (v: unknown) => Array.from(JSON.stringify(v), (ch) => {
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="robots" content="noindex" />
   <title>{title}</title>
-  <link rel="icon" href="/brand/logo.png" />
+  <link rel="icon" href="/brand/favicon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   {fonts && <link rel="stylesheet" href={fonts} />}
   <script type="application/json" id="deals-data" set:html={safeJson(deals)} />
