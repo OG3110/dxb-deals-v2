@@ -2,15 +2,13 @@
 // The overlay lives on <body> (outside the design root) so the root can be made inert while it is open.
 import type { ClientDeal } from '../../lib/deals';
 import type { SavedStore } from '../../lib/client/saved';
-import { openQuickView } from '../../lib/client/quickview';
+import { isQuickViewOpen, openQuickView } from '../../lib/client/quickview';
 import { $, $$ } from '../../lib/client/dom';
 import { ICON, slideHTML } from './markup';
 
 export type OpenFeed = (list: ClientDeal[], startIndex: number, title: string) => void;
 
 const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
-// The quick view drops aria-hidden synchronously on open (its .on class is added a frame later).
-const qvOpen = () => !!document.querySelector('.qv:not([aria-hidden])');
 
 export function createFeed(root: HTMLElement, saved: SavedStore, mobile: boolean): OpenFeed {
   const el = document.createElement('section');
@@ -43,12 +41,14 @@ export function createFeed(root: HTMLElement, saved: SavedStore, mobile: boolean
     if (target < 0 || at === target) { target = -1; show(at); }
   }, { passive: true });
 
+  // Every slide is exactly one feed height tall, so index ⇄ scrollTop is a plain multiplication
+  // (offsetTop would be relative to the overlay, not the scroll container).
+  const topOf = (i: number) => clamp(i) * feed.clientHeight;
   function go(i: number) {
-    const s = feed.children[clamp(i)] as HTMLElement | undefined;
-    if (!s) return;
+    if (!list.length) return;
     target = clamp(i); show(target);
     clearTimeout(tid); tid = window.setTimeout(() => { target = -1; }, 900); // a swipe may interrupt the smooth scroll
-    feed.scrollTo({ top: s.offsetTop, behavior: reduced() ? 'auto' : 'smooth' });
+    feed.scrollTo({ top: topOf(target), behavior: reduced() ? 'auto' : 'smooth' });
   }
   function close() {
     if (!isOpen()) return;
@@ -68,9 +68,8 @@ export function createFeed(root: HTMLElement, saved: SavedStore, mobile: boolean
     el.hidden = false;
     root.inert = true;
     document.documentElement.classList.add('d2-lock');
-    const s = feed.children[Math.max(0, startIndex)] as HTMLElement | undefined;
     target = -1;
-    feed.scrollTop = s ? s.offsetTop : 0;
+    feed.scrollTop = topOf(startIndex);
     show(Math.max(0, startIndex));
     feed.focus({ preventScroll: true });
   };
@@ -86,9 +85,10 @@ export function createFeed(root: HTMLElement, saved: SavedStore, mobile: boolean
     if (t.closest('[data-vf-save]')) saved.toggle(d.id);
     else if (t.closest('[data-vf-info]')) openQuickView(d, { mobile, saved });
   });
-  // Registered at init, i.e. before the quick view's own listener: while the quick view is open, leave Escape to it.
-  document.addEventListener('keydown', e => {
-    if (!isOpen() || qvOpen()) return;
+  // Capture phase on window runs before the quick view's own (bubbling) Escape handler, so the state read here is
+  // the state at keydown time: while the quick view is open, the key belongs to it and the feed stays open.
+  window.addEventListener('keydown', e => {
+    if (!isOpen() || isQuickViewOpen()) return;
     if (e.key === 'Escape') { e.preventDefault(); close(); return; }
     const t = e.target as HTMLElement;
     if (t.closest?.('a,button') && (e.key === ' ' || e.key === 'Enter')) return;
@@ -96,7 +96,7 @@ export function createFeed(root: HTMLElement, saved: SavedStore, mobile: boolean
     if (step) { e.preventDefault(); go(cur + step); }
     else if (e.key === 'Home') { e.preventDefault(); go(0); }
     else if (e.key === 'End') { e.preventDefault(); go(list.length - 1); }
-  });
+  }, true);
   saved.onChange(() => $$('[data-deal-id]', feed).forEach(s =>
     s.querySelector('[data-vf-save]')?.setAttribute('aria-pressed', String(saved.has(s.dataset.dealId!)))));
   return open;

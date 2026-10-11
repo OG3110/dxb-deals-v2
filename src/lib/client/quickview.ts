@@ -22,6 +22,8 @@ function ensure() {
   document.body.append(dim, box);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeQuickView(); });
 }
+/** True from openQuickView() until closeQuickView() (synchronous; independent of the CSS .on class). */
+export function isQuickViewOpen(): boolean { return isOpen; }
 export function openQuickView(d: ClientDeal, opts: { mobile: boolean; saved: SavedStore }): void {
   ensure();
   if (!isOpen) {

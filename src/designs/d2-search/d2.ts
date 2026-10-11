@@ -2,6 +2,7 @@ import { matchDeal, sortDeals, type ClientDeal, type Filter, type SortKey } from
 import { readDeals } from '../../lib/client/data';
 import { createSavedStore } from '../../lib/client/saved';
 import { $, $$ } from '../../lib/client/dom';
+import { isQuickViewOpen } from '../../lib/client/quickview';
 import { createFeed } from './feed';
 import * as M from './markup';
 
@@ -235,7 +236,8 @@ export function initMobile(root: HTMLElement): void {
     else if (t.closest('[data-ss-show]')) { closeLayer(); scrollToEl(all); }
   });
   dim.addEventListener('click', () => closeLayer());
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && current && !document.querySelector('.qv.on')) closeLayer(); });
+  // Capture phase: read the quick-view state before its own Escape handler closes it (one Escape = one layer).
+  window.addEventListener('keydown', e => { if (e.key === 'Escape' && current && !isQuickViewOpen()) closeLayer(); }, true);
   $('[data-ss-form]', ss).addEventListener('submit', e => { e.preventDefault(); closeLayer(); scrollToEl(all); });
 
   // Tapping a row (overview or live search list) opens the feed at that deal.
