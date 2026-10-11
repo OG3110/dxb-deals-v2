@@ -38,7 +38,12 @@ export function initDesktop(root: HTMLElement): void {
       closeDrop();
       app.jump(id, fromGrid);
     },
-    afterReset() { q.focus(); openDrop(); },
+    afterReset() {
+      // A reset inside the All/Saved overlay (e.g. "Browse all deals") stays there: the page behind is inert,
+      // so focusing the field would fail and the dropdown would be left open behind the overlay.
+      if (!ov.hidden) return;
+      q.focus(); openDrop();
+    },
   });
 
   /* ---------- search dropdown ---------- */
