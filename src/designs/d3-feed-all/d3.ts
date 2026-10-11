@@ -4,6 +4,7 @@ import type { ClientDeal } from '../../lib/deals';
 import { isQuickViewOpen } from '../../lib/client/quickview';
 import { $ } from '../../lib/client/dom';
 import { engine } from './engine';
+import { createWheelStepper } from './wheel';
 import * as M from './markup';
 
 export { initMobile } from './mobile';
@@ -41,16 +42,12 @@ export function initDesktop(root: HTMLElement): void {
 
   // Wheel / trackpad anywhere over the feed view = exactly one slide per gesture. Native wheel scrolling on a
   // mandatory snap container snaps back when one notch is less than half a slide, so we step it ourselves.
-  let wheelAt = 0, acc = 0, idle = 0;
+  const wheel = createWheelStepper({ idleMs: 200, threshold: 30 });
   feedv.addEventListener('wheel', e => {
     if (e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX)) return; // pinch-zoom / horizontal
     e.preventDefault();
-    acc += e.deltaY;
-    clearTimeout(idle); idle = window.setTimeout(() => { acc = 0; }, 180);
-    if (Math.abs(acc) < 30 || e.timeStamp - wheelAt < 450) return;
-    wheelAt = e.timeStamp;
-    app.go(app.cur() + (acc > 0 ? 1 : -1));
-    acc = 0;
+    const step = wheel.onWheel(e.deltaY, e.deltaMode, e.timeStamp, app.feed.clientHeight);
+    if (step) app.go(app.cur() + step);
   }, { passive: false });
 
   // Capture phase on window: runs before the quick view's own Escape/keys, and we bail out while it is open.
