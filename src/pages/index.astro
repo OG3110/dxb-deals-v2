@@ -1,4 +1,6 @@
 ---
-// src/pages/index.astro (replaced in Task 12)
+import BaseLayout from '../components/BaseLayout.astro';
+import { loadDeals } from '../lib/load';
+const deals = await loadDeals();
 ---
-<html lang="en"><head><meta charset="utf-8"><meta name="robots" content="noindex"><title>DXB Deals – Preview</title></head><body>Preview scaffold</body></html>
+<BaseLayout title="DXB Deals – Preview" deals={deals}><p>{deals.length} deals · first {deals[0].id} · {deals[0].slug}</p></BaseLayout>

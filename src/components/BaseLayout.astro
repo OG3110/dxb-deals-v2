@@ -1,0 +1,22 @@
+---
+import '../designs/shared.css';
+import type { ClientDeal } from '../lib/deals';
+interface Props { title: string; deals?: ClientDeal[]; bodyClass?: string; fonts?: string }
+const { title, deals = [], bodyClass = '', fonts } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="robots" content="noindex" />
+  <title>{title}</title>
+  <link rel="icon" href="/brand/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  {fonts && <link rel="stylesheet" href={fonts} />}
+  <script type="application/json" id="deals-data" set:html={JSON.stringify(deals)} />
+</head>
+<body class={bodyClass}>
+  <slot />
+</body>
+</html>
