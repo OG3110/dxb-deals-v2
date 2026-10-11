@@ -1,0 +1,104 @@
+---
+import './d2.css';
+import { WA_GENERAL, WA_SELL, type ClientDeal } from '../../lib/deals';
+import { ICON, chipsHTML, quickHTML, ringsHTML, sortTable, tableHTML, stats } from './markup';
+interface Props { deals: ClientDeal[] }
+const { deals } = Astro.props;
+const s = stats(deals);
+const IG = 'https://www.instagram.com/dxb.deals/';
+// Server first paint: first 10 rows in the default table order (ID, newest first).
+const first = tableHTML(sortTable(deals, 'id', -1).slice(0, 10), 'id', -1, () => false);
+---
+<div class="d2 d2-d">
+  <header class="d2-nav">
+    <div class="d2-wrap d2-nav-in">
+      <a href="#d2-top" class="d2-logo" aria-label="DXB Deals – home"><img src="/brand/logo.png" alt="DXB Deals" width="132" height="44" /></a>
+      <nav aria-label="Main">
+        <ul>
+          <li><a href="#d2-all" data-goto-all>Buy</a></li>
+          <li><a href={WA_SELL} target="_blank" rel="noopener">Sell</a></li>
+          <li><a href="#d2-about">About</a></li>
+        </ul>
+      </nav>
+      <a class="d2-btn d2-btn-wa" href={WA_GENERAL} target="_blank" rel="noopener"><Fragment set:html={ICON.wa(18)} />WhatsApp</a>
+    </div>
+  </header>
+
+  <main id="d2-top">
+    <section class="d2-hero">
+      <div class="d2-wrap d2-hero-in">
+        <p class="d2-eyebrow d2-up">Business brokerage · Dubai</p>
+        <h1 class="d2-up d2-up2">Find a <span>business</span> to buy in Dubai</h1>
+        <p class="d2-sub d2-up d2-up3">{s.total} opportunities · restaurants, cafés, salons, nightlife &amp; more · from AED {s.from}</p>
+        <form class="d2-search d2-up d2-up4" data-search role="search" autocomplete="off">
+          <div class="d2-search-bar">
+            <Fragment set:html={ICON.search(22)} />
+            <label for="d2-q" class="d2-vh">Search businesses, areas or IDs</label>
+            <input id="d2-q" type="search" data-q data-bind="q" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="d2-sug"
+              placeholder="Try “restaurant Jumeirah”, “under 1M” or “DXB005”" autocomplete="off" spellcheck="false" />
+            <button type="submit" class="d2-go">Search</button>
+          </div>
+          <ul class="d2-sug" id="d2-sug" role="listbox" aria-label="Suggestions" data-sug hidden></ul>
+        </form>
+        <div class="d2-quick d2-up d2-up5" role="group" aria-label="Popular searches" set:html={quickHTML('d2-qp')} />
+      </div>
+    </section>
+
+    <section class="d2-stories d2-wrap" aria-labelledby="d2-sh">
+      <div class="d2-sec-hd">
+        <h2 id="d2-sh">Stories</h2>
+        <p>Pick a category and swipe through every deal in it.</p>
+      </div>
+      <div class="d2-rings" set:html={ringsHTML(deals)} />
+    </section>
+
+    <section class="d2-all d2-wrap" id="d2-all" aria-labelledby="d2-ah">
+      <div class="d2-all-hd">
+        <div>
+          <h2 id="d2-ah" data-heading aria-live="polite" aria-atomic="true">All businesses ({s.total})</h2>
+          <button type="button" class="d2-clear" data-reset data-filtered hidden>Clear all filters</button>
+        </div>
+        <div class="d2-viewtg" role="group" aria-label="Layout">
+          <button type="button" data-view-btn="table" aria-pressed="true"><Fragment set:html={ICON.table} />Table</button>
+          <button type="button" data-view-btn="grid" aria-pressed="false"><Fragment set:html={ICON.grid} />Grid</button>
+        </div>
+      </div>
+      <div class="d2-filters">
+        <div class="d2-chips" role="group" aria-label="Category" set:html={chipsHTML(deals, 'all')} />
+        <button type="button" class="d2-savedbtn" data-saved-toggle aria-pressed="false"><Fragment set:html={ICON.heart(16)} /><span>Saved (<span data-saved-count>0</span>)</span></button>
+      </div>
+      <div class="d2-out" data-out set:html={first} />
+    </section>
+
+    <section class="d2-about d2-wrap" id="d2-about" aria-labelledby="d2-abh">
+      <img src="/brand/tolga.png" alt="Tolga Keklik" width="220" height="220" loading="lazy" decoding="async" />
+      <div>
+        <p class="d2-eyebrow d2-eyebrow-dk">About</p>
+        <h2 id="d2-abh">Tolga Keklik – business broker in Dubai</h2>
+        <p>Tolga connects buyers with fully fitted, running businesses across Dubai — cafés, salons, restaurants and clubs. Every listing shows the key numbers up front, and you deal with him directly: documents, viewings and negotiation in one conversation.</p>
+        <div class="d2-about-acts">
+          <a class="d2-btn d2-btn-wa" href={WA_GENERAL} target="_blank" rel="noopener"><Fragment set:html={ICON.wa(18)} />WhatsApp Tolga</a>
+          <a class="d2-btn d2-btn-gold" href={WA_SELL} target="_blank" rel="noopener">Sell your business <Fragment set:html={ICON.arrow} /></a>
+          <a class="d2-btn d2-btn-line" href={IG} target="_blank" rel="noopener"><Fragment set:html={ICON.ig} />@dxb.deals</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="d2-foot">
+    <div class="d2-wrap d2-foot-in">
+      <img src="/brand/logo.png" alt="DXB Deals" width="108" height="36" loading="lazy" />
+      <span>© 2026 DXB DEALS · Dubai, UAE</span>
+      <a href={IG} target="_blank" rel="noopener">Instagram</a>
+    </div>
+  </footer>
+</div>
+
+<script>
+  import { initDesktop } from './d2';
+  const wrap = document.querySelector<HTMLElement>('[data-version=desktop]');
+  if (wrap) {
+    if (document.documentElement.dataset.view === 'desktop') initDesktop(wrap.querySelector<HTMLElement>('.d2-d')!);
+    else wrap.remove(); // inactive version: drop it so only one set of [data-deal-id] rows exists
+  }
+</script>

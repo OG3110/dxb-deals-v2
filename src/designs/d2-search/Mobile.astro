@@ -1,0 +1,100 @@
+---
+import './d2.css';
+import { WA_GENERAL, WA_SELL, type ClientDeal } from '../../lib/deals';
+import { ICON, MSORTS, chipsHTML, listRowHTML, quickHTML, ringsHTML, stats } from './markup';
+interface Props { deals: ClientDeal[] }
+const { deals } = Astro.props;
+const s = stats(deals);
+const IG = 'https://www.instagram.com/dxb.deals/';
+---
+<div class="d2 d2-m">
+  <div class="d2-page" data-page>
+    <header class="d2-mhead">
+      <a href="#d2-mtop" class="d2-logo" aria-label="DXB Deals – top"><img src="/brand/logo.png" alt="DXB Deals" width="114" height="38" /></a>
+      <a class="d2-mwa" href={WA_GENERAL} target="_blank" rel="noopener" aria-label="WhatsApp Tolga"><Fragment set:html={ICON.wa(22)} /></a>
+    </header>
+    <div class="d2-mbarq">
+      <button type="button" class="d2-trigger" data-trigger aria-haspopup="dialog">
+        <Fragment set:html={ICON.search(20)} />
+        <span class="d2-vh">Search: </span><span class="d2-trigger-tx" data-trigger-text>Business, area or ID</span>
+      </button>
+      <button type="button" class="d2-trigger-x" data-clear-q aria-label="Clear search" hidden>✕</button>
+    </div>
+
+    <main id="d2-mtop">
+      <section class="d2-mhero">
+        <h1>Find a <span>business</span> to buy in Dubai</h1>
+        <p>{s.total} opportunities · from AED {s.from}</p>
+      </section>
+
+      <section class="d2-mstories" aria-labelledby="d2-msh">
+        <h2 id="d2-msh" class="d2-vh">Stories</h2>
+        <div class="d2-rings d2-mrings" set:html={ringsHTML(deals)} />
+      </section>
+
+      <section class="d2-mall" id="d2-mall" aria-labelledby="d2-mah">
+        <div class="d2-mall-hd">
+          <h2 id="d2-mah" data-heading aria-live="polite" aria-atomic="true">All businesses ({s.total})</h2>
+          <button type="button" class="d2-msort" data-sort-open aria-haspopup="dialog"><Fragment set:html={ICON.sort} /><span class="d2-vh">Sort: </span><span data-sort-label>Newest</span></button>
+        </div>
+        <div class="d2-chips d2-mchips" role="group" aria-label="Category" set:html={chipsHTML(deals, 'all')} />
+        <button type="button" class="d2-clear d2-mclear" data-reset data-filtered hidden>Clear all filters</button>
+        <div class="d2-mlist" data-out set:html={deals.slice(0, 10).map(listRowHTML).join('')} />
+      </section>
+
+      <section class="d2-mabout" aria-labelledby="d2-mabh">
+        <img src="/brand/tolga.png" alt="Tolga Keklik" width="96" height="96" loading="lazy" decoding="async" />
+        <h2 id="d2-mabh">Tolga Keklik – business broker in Dubai</h2>
+        <p>Running businesses across Dubai, key numbers up front and a direct line to the broker.</p>
+        <div class="d2-mabout-acts">
+          <a class="d2-btn d2-btn-gold" href={WA_SELL} target="_blank" rel="noopener">Sell your business</a>
+          <a class="d2-btn d2-btn-line" href={IG} target="_blank" rel="noopener"><Fragment set:html={ICON.ig} />@dxb.deals</a>
+        </div>
+        <small>© 2026 DXB DEALS · Dubai, UAE</small>
+      </section>
+    </main>
+
+    <nav class="d2-mbar" aria-label="Quick actions">
+      <button type="button" class="d2-mbar-saved" data-saved-toggle aria-pressed="false"><Fragment set:html={ICON.heart(18)} /><span>Saved (<span data-saved-count>0</span>)</span></button>
+      <a class="d2-btn d2-btn-wa" href={WA_GENERAL} target="_blank" rel="noopener"><Fragment set:html={ICON.wa(18)} />WhatsApp</a>
+    </nav>
+  </div>
+
+  <div class="d2-ss" data-ss role="dialog" aria-modal="true" aria-labelledby="d2-ssh" hidden>
+    <div class="d2-ss-top"><h2 id="d2-ssh">Search</h2><button type="button" class="d2-x" data-layer-close aria-label="Close search">✕</button></div>
+    <form class="d2-ss-form" data-ss-form role="search" autocomplete="off">
+      <label class="d2-ss-field"><Fragment set:html={ICON.search(20)} /><span class="d2-vh">Search businesses, areas or IDs</span>
+        <input type="search" data-bind="q" placeholder="Business, area or ID" enterkeyhint="search" autocomplete="off" spellcheck="false" />
+      </label>
+      <button type="button" class="d2-ss-clear" data-clear-q aria-label="Clear search" hidden>✕</button>
+    </form>
+    <div class="d2-chips d2-mchips" role="group" aria-label="Category" set:html={chipsHTML(deals, 'all')} />
+    <div class="d2-ss-body">
+      <div class="d2-ss-pop" data-ss-pop>
+        <h3>Popular searches</h3>
+        <div class="d2-ss-pills" set:html={quickHTML('d2-qp d2-qp-lt')} />
+      </div>
+      <div class="d2-ss-list" data-ss-list></div>
+    </div>
+    <div class="d2-ss-foot"><button type="button" class="d2-go d2-go-wide" data-ss-show>Show <span data-count>{s.total}</span> <span data-results-label>results</span></button></div>
+  </div>
+
+  <div class="d2-dim" data-dim></div>
+  <div class="d2-sheet" data-sort-sheet role="dialog" aria-modal="true" aria-labelledby="d2-sorth">
+    <div class="d2-grab"></div>
+    <div class="d2-sheet-hd"><h2 id="d2-sorth">Sort by</h2><button type="button" class="d2-x" data-layer-close aria-label="Close">✕</button></div>
+    <fieldset><legend class="d2-vh">Sort by</legend>
+      <div class="d2-opts">{MSORTS.map(o => <label class="d2-opt"><input type="radio" name="d2-msort" data-bind="msort" value={o.key} checked={o.key === 'newest'} /><span>{o.label}</span></label>)}</div>
+    </fieldset>
+    <button type="button" class="d2-go d2-go-wide" data-layer-close>Show <span data-count>{s.total}</span> <span data-results-label>results</span></button>
+  </div>
+</div>
+
+<script>
+  import { initMobile } from './d2';
+  const wrap = document.querySelector<HTMLElement>('[data-version=mobile]');
+  if (wrap) {
+    if (document.documentElement.dataset.view === 'mobile') initMobile(wrap.querySelector<HTMLElement>('.d2-m')!);
+    else wrap.remove(); // inactive version: drop it so only one set of [data-deal-id] rows exists
+  }
+</script>

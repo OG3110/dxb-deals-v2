@@ -5,13 +5,15 @@ import { DESIGNS } from '../designs/registry';
 import { loadDeals } from '../lib/load';
 import D1Desktop from '../designs/d1-marketplace/Desktop.astro';
 import D1Mobile from '../designs/d1-marketplace/Mobile.astro';
-// Tasks 8–11 add: import D2Desktop/D2Mobile … D5Desktop/D5Mobile
+import D2Desktop from '../designs/d2-search/Desktop.astro';
+import D2Mobile from '../designs/d2-search/Mobile.astro';
+// Tasks 9–11 add: import D3Desktop/D3Mobile … D5Desktop/D5Mobile
 
 export function getStaticPaths() { return DESIGNS.map(d => ({ params: { n: String(d.n) } })); }
 const n = Number(Astro.params.n);
 const info = DESIGNS[n - 1];
 const deals = await loadDeals();
-const parts: Record<number, [any, any]> = { 1: [D1Desktop, D1Mobile] };
+const parts: Record<number, [any, any]> = { 1: [D1Desktop, D1Mobile], 2: [D2Desktop, D2Mobile] };
 const [Desk, Mob] = parts[n] ?? [null, null];
 ---
 <BaseLayout title={`DXB Deals – Design ${n}: ${info.name}`} deals={deals} fonts={info.fonts} bodyClass={`design-${n}`}>
