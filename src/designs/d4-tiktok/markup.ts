@@ -4,7 +4,7 @@ import {
   CATEGORIES, categoryLabel, countBy, discountPct, fmtMoney, fmtSize, matchDeal, sortDeals, waLink,
   type ClientDeal, type Filter, type SortKey,
 } from '../../lib/deals';
-import { esc, flyerHTML, cssUrl } from '../../lib/client/dom';
+import { esc, flyerHTML, cssUrl, place } from '../../lib/client/dom';
 
 /* ---------- feeds ---------- */
 /** What the feed is showing: the two curated tabs, or one of the shared filters (distress / a category). */
@@ -68,8 +68,6 @@ export const sortOptionsHTML = () => SORTS.map(s => `<option value="${s.key}">${
 
 const aed = (n: number | null) => (n == null ? '—' : `AED ${fmtMoney(n)}`);
 const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : '');
-/** "Jumeirah, Dubai" — but never "Dubai, Dubai". */
-export const place = (d: ClientDeal) => (/^dubai$/i.test(d.area.trim()) ? esc(d.area) : `${esc(d.area)}, Dubai`);
 const lbl = (d: ClientDeal) => `${esc(d.title)} (${esc(d.id)})`;
 const tag = (s: string) => '#' + s.replace(/[^\p{L}\p{N}]+/gu, '');
 const status = (d: ClientDeal) => (d.status !== 'available' ? `<span class="d4-st">${esc(cap(d.status))}</span>` : '');

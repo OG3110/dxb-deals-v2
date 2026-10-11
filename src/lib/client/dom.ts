@@ -6,6 +6,10 @@ export function esc(s: unknown): string {
 export function cssUrl(u: unknown): string {
   return esc(String(u ?? '').replace(/["'()\\\s<>]/g, c => '%' + c.charCodeAt(0).toString(16).toUpperCase().padStart(2, '0')));
 }
+/** Escaped place label: "Jumeirah, Dubai" — but never "Dubai, Dubai". */
+export function place(d: { area: string }): string {
+  return /^dubai$/i.test(d.area.trim()) ? esc(d.area) : `${esc(d.area)}, Dubai`;
+}
 export function $(sel: string, root: ParentNode = document): HTMLElement {
   const el = root.querySelector<HTMLElement>(sel); if (!el) throw new Error('Missing element ' + sel); return el;
 }

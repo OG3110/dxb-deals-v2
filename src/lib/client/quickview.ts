@@ -1,5 +1,5 @@
 import { fmtMoney, fmtSize, waLink, TEL, categoryLabel, discountPct, type ClientDeal } from '../deals';
-import { esc, flyerHTML } from './dom';
+import { esc, flyerHTML, place } from './dom';
 import type { SavedStore } from './saved';
 
 let dim: HTMLElement | null = null, box: HTMLElement | null = null;
@@ -7,8 +7,6 @@ let lastFocus: HTMLElement | null = null;
 let isOpen = false;
 
 const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : '');
-/** "Jumeirah, Dubai" — but never "Dubai, Dubai". */
-const place = (d: ClientDeal) => (/^dubai$/i.test(d.area.trim()) ? esc(d.area) : `${esc(d.area)}, Dubai`);
 
 function setClosedA11y(closed: boolean) {
   if (!box) return;

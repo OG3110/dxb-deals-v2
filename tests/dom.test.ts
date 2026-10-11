@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cssUrl } from '../src/lib/client/dom';
+import { cssUrl, place } from '../src/lib/client/dom';
 
 describe('cssUrl', () => {
   it('percent-encodes quotes and parentheses', () => {
@@ -17,5 +17,13 @@ describe('cssUrl', () => {
   });
   it('html-escapes ampersands', () => {
     expect(cssUrl('/a.webp?x=1&y=2')).toBe('/a.webp?x=1&amp;y=2');
+  });
+});
+
+describe('place', () => {
+  it('appends Dubai, but never prints "Dubai, Dubai", and escapes', () => {
+    expect(place({ area: 'Jumeirah' })).toBe('Jumeirah, Dubai');
+    expect(place({ area: ' dubai ' })).toBe(' dubai ');
+    expect(place({ area: '<b>' })).toBe('&lt;b&gt;, Dubai');
   });
 });

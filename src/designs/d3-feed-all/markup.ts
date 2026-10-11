@@ -1,7 +1,7 @@
 // Pure string builders for Design 3 (Feed ⇄ All) — shared by the .astro components (server first paint)
 // and by d3.ts / mobile.ts (client re-render), so every piece of deal markup exists exactly once. No DOM access here.
 import { CATEGORIES, categoryLabel, countBy, discountPct, fmtMoney, fmtSize, waLink, type ClientDeal, type Filter, type SortKey } from '../../lib/deals';
-import { esc, flyerHTML, cssUrl } from '../../lib/client/dom';
+import { esc, flyerHTML, cssUrl, place } from '../../lib/client/dom';
 
 const svg = (body: string, size = 20, extra = '') =>
   `<svg viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true" focusable="false"${extra}>${body}</svg>`;
@@ -32,7 +32,6 @@ const aed = (n: number | null) => (n == null ? '—' : `AED ${fmtMoney(n)}`);
 const cap = (s: string) => (s ? s[0].toUpperCase() + s.slice(1) : '');
 const ds = (d: ClientDeal) => (d.distress ? '<span class="d3-ds">Distress</span>' : '');
 const st = (d: ClientDeal) => (d.status !== 'available' ? `<span class="d3-st">${esc(cap(d.status))}</span>` : '');
-const place = (d: ClientDeal) => (/^dubai$/i.test(d.area.trim()) ? esc(d.area) : `${esc(d.area)}, Dubai`);
 const lbl = (d: ClientDeal) => `${esc(d.title)} (${esc(d.id)})`;
 
 /** Save toggle: visible "Save"/"Saved" swap is pure CSS on aria-pressed, so saved-state updates never rebuild markup. */
