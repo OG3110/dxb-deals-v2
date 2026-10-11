@@ -1,0 +1,92 @@
+---
+import './d5.css';
+import './d5-desk.css';
+import { WA_GENERAL, WA_SELL, waLink, type ClientDeal } from '../../lib/deals';
+import * as M from './markup';
+interface Props { deals: ClientDeal[] }
+const { deals } = Astro.props;
+const s = M.stats(deals);
+// Server first paint: the first deal on the left and the first 8 flyers on the right; the client rebuilds the list on init.
+const list = M.feedList(deals, { q: '', ff: 'all' });
+const first = list[0];
+const items = list.slice(0, 8).map((d, i) => M.itemHTML(d, i, list.length)).join('');
+const l = first ? M.actLabels(first) : null;
+---
+<div class="d5 d5-d">
+  <main class="d5-split" data-main>
+    <section class="d5-left" aria-label="Current deal">
+      <header class="d5-top">
+        <a href="/design-5/" class="d5-logo" aria-label="DXB Deals – start"><img src="/brand/logo.png" alt="DXB Deals" width="138" height="46" /></a>
+        <nav class="d5-nav" aria-label="Browse">
+          <button type="button" class="d5-nb d5-nb-ic" data-search-toggle aria-expanded="false" aria-controls="d5-sf" aria-keyshortcuts="Control+K Meta+K /" aria-label="Search deals"><Fragment set:html={M.ICON.search()} /></button>
+          <button type="button" class="d5-nb" data-ov-open="all"><Fragment set:html={M.ICON.grid()} />All<small>{s.total}</small></button>
+          <button type="button" class="d5-nb" data-ov-open="saved" aria-label="Saved deals"><Fragment set:html={M.ICON.heart(17)} /><small data-saved-count>0</small></button>
+          <a class="d5-nb d5-nb-wa" href={WA_GENERAL} target="_blank" rel="noopener"><Fragment set:html={M.ICON.wa(17)} />WhatsApp</a>
+        </nav>
+      </header>
+
+      <div class="d5-srow">
+        <form class="d5-sf" id="d5-sf" data-sf role="search" autocomplete="off" hidden>
+          <label>
+            <Fragment set:html={M.ICON.search(18)} />
+            <span class="d5-vh">Search businesses, areas or IDs</span>
+            <input type="search" data-bind="q" placeholder="Café, Jumeirah, under 1m…" autocomplete="off" spellcheck="false" />
+          </label>
+          <span class="d5-sf-n" data-results-head aria-live="polite" aria-atomic="true">{`All ${s.total} businesses`}</span>
+          <button type="button" class="d5-sf-x" data-search-close aria-label="Close search"><Fragment set:html={M.ICON.close()} /></button>
+        </form>
+        <p class="d5-lead">{s.total} running businesses in Dubai, from AED {s.from}. Scroll the flyers — the numbers follow.</p>
+      </div>
+
+      <div class="d5-mid">
+        <h1 class="d5-vh">DXB Deals – {s.total} businesses for sale in Dubai</h1>
+        <div class="d5-numrow">
+          <p class="d5-num" data-ctr aria-label={M.counterLabel(0, list.length)} set:html={M.counterHTML(0, list.length)} />
+          <span class="d5-num-l">Opportunities</span>
+          <button type="button" class="d5-pill" data-clear-feed hidden><span data-clear-text></span><span class="d5-vh"> – show all deals</span><Fragment set:html={M.ICON.close(13)} /></button>
+        </div>
+        <div class="d5-info" data-info set:html={M.infoHTML(first ?? null)} />
+      </div>
+
+      <div class="d5-bot">
+        <div class="d5-cta" data-cta>
+          <button type="button" class="d5-btn" data-cta-details data-details={first?.id} aria-label={l?.details}><Fragment set:html={M.ICON.info(17)} />Details</button>
+          <a class="d5-btn d5-btn-wa" data-cta-wa href={first ? waLink(first) : WA_GENERAL} target="_blank" rel="noopener" aria-label={l?.wa}><Fragment set:html={M.ICON.wa(17)} />Ask on WhatsApp</a>
+          <button type="button" class="d5-btn d5-btn-sv" data-cta-save data-save={first?.id} aria-pressed="false" aria-label={l?.save}><Fragment set:html={M.ICON.heart(17)} /><span class="d5-off" aria-hidden="true">Save</span><span class="d5-on" aria-hidden="true">Saved</span></button>
+        </div>
+        <div class="d5-dots" data-dots aria-hidden="true" set:html={M.dotsHTML(list.length)} />
+      </div>
+    </section>
+
+    <section class="d5-right" aria-label="Flyers">
+      <p class="d5-hint" aria-hidden="true">Scroll <span>↓</span></p>
+      <div class="d5-reel" data-reel tabindex="-1" aria-label="Deal flyers – scroll or use the arrow keys; select a flyer for details" set:html={items} />
+      <div class="d5-feedempty" data-feed-empty></div>
+      <a class="d5-sell" href={WA_SELL} target="_blank" rel="noopener">Selling a business? <b>Talk to Tolga →</b></a>
+    </section>
+  </main>
+
+  <div class="d5-ov" data-ov data-layer role="dialog" aria-modal="true" aria-labelledby="d5-ovh" aria-hidden="true" hidden>
+    <div class="d5-ov-dim" data-ov-x></div>
+    <div class="d5-ov-panel">
+      <header class="d5-ov-top">
+        <h2 id="d5-ovh" data-grid-head aria-live="polite" aria-atomic="true">{M.headingText(s.total, false)}</h2>
+        <label class="d5-sort"><span>Sort by</span><select data-sort set:html={M.sortOptionsHTML()} /></label>
+        <button type="button" class="d5-ov-x" data-ov-x data-ov-close aria-label="Close"><Fragment set:html={M.ICON.close(20)} /></button>
+      </header>
+      <div class="d5-chips" role="group" aria-label="Category" set:html={M.chipsHTML(deals)} />
+      <div class="d5-ov-sc" data-ov-scroll>
+        <div class="d5-grid" data-grid></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  import { initDesktop } from './d5';
+  const wrap = document.querySelector<HTMLElement>('[data-version=desktop]');
+  if (wrap) {
+    if (document.documentElement.dataset.view === 'desktop') initDesktop(wrap.querySelector<HTMLElement>('.d5-d')!);
+    else wrap.remove(); // inactive version: drop it so only one set of [data-deal-id] elements exists
+  }
+</script>

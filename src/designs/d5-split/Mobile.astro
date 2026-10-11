@@ -1,0 +1,83 @@
+---
+import './d5.css';
+import './d5-mob.css';
+import { WA_GENERAL, waLink, type ClientDeal } from '../../lib/deals';
+import * as M from './markup';
+interface Props { deals: ClientDeal[] }
+const { deals } = Astro.props;
+const s = M.stats(deals);
+// Server first paint: the first deal in the panel and the first 8 flyer cards; the client rebuilds the list on init.
+const list = M.feedList(deals, { q: '', ff: 'all' });
+const first = list[0];
+const items = list.slice(0, 8).map((d, i) => M.itemHTML(d, i, list.length)).join('');
+const l = first ? M.actLabels(first) : null;
+---
+<div class="d5 d5-m">
+  <h1 class="d5-vh">DXB Deals – {s.total} businesses for sale in Dubai</h1>
+  <div class="d5-page" data-page>
+    <header class="d5-mbar">
+      <a href="/design-5/" class="d5-mlogo" aria-label="DXB Deals – start"><img src="/brand/logo.png" alt="DXB Deals" width="108" height="36" /></a>
+      <nav class="d5-mnav" aria-label="Browse">
+        <button type="button" class="d5-mb" data-sheet-open="search" aria-label="Search deals"><Fragment set:html={M.ICON.search(20)} /></button>
+        <button type="button" class="d5-mb" data-sheet-open="saved" aria-label="Saved deals"><Fragment set:html={M.ICON.heart(19)} /><span class="d5-badge" data-saved-badge hidden>0</span></button>
+        <button type="button" class="d5-mb d5-mb-all" data-sheet-open="all">All<small>{s.total}</small></button>
+      </nav>
+    </header>
+
+    <div class="d5-mreel" data-reel tabindex="-1" aria-label="Deal flyers – swipe up for the next one; tap the flyer for details" set:html={items} />
+    <div class="d5-mempty" data-feed-empty></div>
+
+    <section class="d5-panel" aria-label="Current deal">
+      <div class="d5-numrow">
+        <p class="d5-num" data-ctr aria-label={M.counterLabel(0, list.length)} set:html={M.counterHTML(0, list.length)} />
+        <button type="button" class="d5-pill" data-clear-feed hidden><span data-clear-text></span><span class="d5-vh"> – show all deals</span><Fragment set:html={M.ICON.close(12)} /></button>
+      </div>
+      <div class="d5-pinfo" data-info set:html={M.minfoHTML(first ?? null)} />
+      <div class="d5-pacts" data-acts>
+        <a class="d5-btn d5-btn-wa" data-cta-wa href={first ? waLink(first) : WA_GENERAL} target="_blank" rel="noopener" aria-label={l?.wa}><Fragment set:html={M.ICON.wa(18)} />WhatsApp</a>
+        <button type="button" class="d5-btn d5-btn-sv" data-cta-save data-save={first?.id} aria-pressed="false" aria-label={l?.save}><Fragment set:html={M.ICON.heart(18)} /><span class="d5-off" aria-hidden="true">Save</span><span class="d5-on" aria-hidden="true">Saved</span></button>
+        <button type="button" class="d5-btn" data-cta-details data-details={first?.id} aria-label={l?.details}>Details</button>
+      </div>
+    </section>
+  </div>
+
+  <section class="d5-sheet" data-sheet="search" data-layer role="dialog" aria-labelledby="d5-ssh" hidden>
+    <div class="d5-sh-h">
+      <h2 id="d5-ssh">Search</h2>
+      <button type="button" class="d5-sh-x" data-sheet-x aria-label="Close search"><Fragment set:html={M.ICON.close(18)} /></button>
+    </div>
+    <form class="d5-msf" role="search" autocomplete="off">
+      <label><Fragment set:html={M.ICON.search(18)} /><span class="d5-vh">Search businesses, areas or IDs</span>
+        <input type="search" data-bind="q" placeholder="Business, area, ID or “under 1m”" enterkeyhint="search" autocomplete="off" spellcheck="false" />
+      </label>
+    </form>
+    <div class="d5-sh-b" data-scroll>
+      <p class="d5-meta" data-results-head aria-live="polite" aria-atomic="true">{`All ${s.total} businesses`}</p>
+      <div data-results></div>
+    </div>
+  </section>
+
+  <section class="d5-sheet" data-sheet="grid" data-kind="all" data-layer role="dialog" aria-labelledby="d5-gsh" hidden>
+    <div class="d5-sh-h">
+      <h2 id="d5-gsh" data-grid-title>All deals</h2>
+      <button type="button" class="d5-sh-x" data-sheet-x aria-label="Close"><Fragment set:html={M.ICON.close(18)} /></button>
+    </div>
+    <div class="d5-mchips" role="group" aria-label="Category" set:html={M.chipsHTML(deals)} />
+    <div class="d5-meta d5-meta-row">
+      <span data-grid-head aria-live="polite" aria-atomic="true">{M.headingText(s.total, false)}</span>
+      <label><span class="d5-vh">Sort by</span><select data-sort set:html={M.sortOptionsHTML()} /></label>
+    </div>
+    <div class="d5-sh-b" data-scroll>
+      <div class="d5-mgrid" data-grid></div>
+    </div>
+  </section>
+</div>
+
+<script>
+  import { initMobile } from './d5';
+  const wrap = document.querySelector<HTMLElement>('[data-version=mobile]');
+  if (wrap) {
+    if (document.documentElement.dataset.view === 'mobile') initMobile(wrap.querySelector<HTMLElement>('.d5-m')!);
+    else wrap.remove(); // inactive version: drop it so only one set of [data-deal-id] elements exists
+  }
+</script>

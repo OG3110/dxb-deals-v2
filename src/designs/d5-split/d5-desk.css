@@ -1,0 +1,115 @@
+/* Design 5 · Split Scroll — desktop (port of mockup T2): one cream screen in two halves. Left: the current deal in
+   big type, fixed; right: a snap column of flyers (inactive ones dimmed and tilted). Every rule is scoped to .d5-d. */
+.d5-d { height: 100vh; height: 100dvh; overflow: hidden; }
+.d5-d .d5-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); height: 100%; }
+
+/* ---------- left column ---------- */
+.d5-d .d5-left {
+  display: grid; grid-template-rows: auto auto 1fr auto; min-height: 0;
+  /* bottom padding keeps the buttons and dots above the preview pill */
+  padding: 30px clamp(32px, 4vw, 64px) 92px; border-right: 1px solid var(--line);
+}
+.d5-d .d5-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.d5-d .d5-logo img { height: 46px; width: auto; margin: -6px 0 -6px -8px; }
+.d5-d .d5-nav { display: flex; align-items: center; gap: 8px; }
+.d5-d .d5-nb {
+  display: inline-flex; align-items: center; gap: 7px; height: 40px; padding: 0 15px; border-radius: 999px;
+  border: 1px solid var(--line2); background: #FBF8F1; font-size: 14px; font-weight: 500; white-space: nowrap;
+  transition: background-color .2s, border-color .2s;
+}
+.d5-d .d5-nb small { font-size: 12px; color: var(--soft); }
+.d5-d .d5-nb-ic { width: 40px; padding: 0; justify-content: center; }
+.d5-d .d5-nb[aria-expanded=true] { background: var(--ink); color: var(--cream); border-color: var(--ink); }
+.d5-d .d5-nb-wa svg { color: #1DAA55; }
+@media (hover: hover) { .d5-d .d5-nb:hover { border-color: var(--ink); } }
+
+/* search row: the lead text and the inline search share one reserved row, so opening search never shifts the deal */
+.d5-d .d5-srow { height: 50px; margin-top: 18px; display: flex; align-items: center; }
+.d5-d .d5-lead { margin: 0; max-width: 460px; font-size: 14.5px; color: var(--mut); }
+.d5-d.d5-searching .d5-lead { display: none; }
+.d5-d .d5-sf { display: flex; align-items: center; gap: 12px; width: 100%; }
+.d5-d .d5-sf label {
+  flex: 0 1 380px; display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 16px;
+  border-radius: 999px; background: #fff; border: 1px solid var(--line2); color: var(--soft);
+  box-shadow: 0 6px 20px rgba(18, 48, 58, .06);
+}
+.d5-d .d5-sf label:focus-within { border-color: var(--ink); }
+.d5-d .d5-sf input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: 400 16px var(--sans); color: var(--ink); }
+.d5-d .d5-sf input::-webkit-search-cancel-button { display: none; }
+.d5-d .d5-sf-n { font-size: 13.5px; color: var(--mut); white-space: nowrap; }
+.d5-d .d5-sf-x { flex: none; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--cream2); }
+
+.d5-d .d5-mid { align-self: center; min-width: 0; padding: 12px 0; }
+.d5-d .d5-num b { font-size: clamp(56px, 6vh, 76px); }
+.d5-d .d5-num-l { font-size: 12px; letter-spacing: .24em; text-transform: uppercase; color: var(--soft); }
+.d5-d .d5-info { margin-top: 18px; max-width: 620px; }
+.d5-d .d5-info h2 { margin: 10px 0 8px; font: 500 clamp(40px, 3.7vw, 56px)/1.02 var(--serif); letter-spacing: -.01em; overflow-wrap: anywhere; }
+.d5-d .d5-ar { font-size: 16px; }
+.d5-d .d5-kv { margin-top: 26px; }
+.d5-d .d5-kv dd { font-size: 21px; }
+
+.d5-d .d5-bot { min-width: 0; }
+.d5-d .d5-cta { display: flex; flex-wrap: wrap; gap: 10px; }
+.d5-d .d5-dots { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 24px; }
+.d5-d .d5-dots i {
+  width: 14px; height: 15px; padding: 6px 0; background: var(--line2) content-box; border-radius: 2px; cursor: pointer;
+  transition: width .3s, background-color .3s;
+}
+.d5-d .d5-dots i.on { width: 40px; background-color: var(--ink); }
+
+/* ---------- right column: snap column of flyers ---------- */
+.d5-d .d5-right { position: relative; min-height: 0; overflow: hidden; background: linear-gradient(180deg, var(--cream) 0%, var(--cream2) 100%); }
+.d5-d .d5-reel {
+  position: absolute; inset: 0; overflow-y: auto; overscroll-behavior: contain;
+  scroll-snap-type: y mandatory; scrollbar-width: thin; scrollbar-color: var(--line2) transparent;
+  /* items are 66vh: the neighbours peek in above and below; the padding lets the first and last centre */
+  padding: 17vh 0; padding: 17dvh 0;
+}
+.d5-d .d5-reel:focus-visible { outline-offset: -4px; }
+.d5-d .d5-it { height: 66vh; height: 66dvh; display: flex; align-items: center; justify-content: center; scroll-snap-align: center; scroll-snap-stop: always; }
+.d5-d .d5-card {
+  display: block; height: min(533px, 62vh); aspect-ratio: 9 / 16; border-radius: 18px; overflow: hidden;
+  box-shadow: 0 30px 60px rgba(18, 48, 58, .25); transform: scale(.86) rotate(-3deg); opacity: .45;
+  transition: transform .6s cubic-bezier(.2, .7, .2, 1), opacity .6s, box-shadow .6s;
+}
+.d5-d .d5-it:nth-child(even) .d5-card { transform: scale(.86) rotate(3deg); }
+.d5-d .d5-it.on .d5-card { transform: none; opacity: 1; box-shadow: 0 34px 70px rgba(18, 48, 58, .3); cursor: zoom-in; }
+.d5-d .d5-card .flyer-card { width: 100%; height: 100%; }
+@media (hover: hover) { .d5-d .d5-it:not(.on) .d5-card:hover { opacity: .7; } }
+
+.d5-d .d5-hint {
+  position: absolute; z-index: 2; top: 22px; right: 26px; margin: 0; padding: 7px 14px; border-radius: 999px;
+  background: var(--ink); color: var(--cream); font-size: 13px; font-weight: 500; transition: opacity .4s;
+}
+.d5-d .d5-hint span { display: inline-block; }
+.d5-d.d5-moved .d5-hint, .d5-d.d5-none .d5-hint { opacity: 0; }
+.d5-d .d5-feedempty { position: absolute; inset: 0; display: grid; place-items: center; pointer-events: none; }
+.d5-d .d5-feedempty > * { pointer-events: auto; text-align: center; }
+.d5-d:not(.d5-none) .d5-feedempty { display: none; }
+.d5-d .d5-sell { position: absolute; z-index: 2; right: 26px; bottom: 26px; font-size: 13px; color: var(--mut); }
+.d5-d .d5-sell b { color: var(--ink); font-weight: 700; }
+@media (hover: hover) { .d5-d .d5-sell:hover b { text-decoration: underline; } }
+
+/* ---------- "All" / "Saved" overview ---------- */
+.d5-d .d5-ov { position: fixed; inset: 0; z-index: 800; }
+.d5-d .d5-ov-dim { position: absolute; inset: 0; background: rgba(18, 48, 58, .4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+.d5-d .d5-ov-panel {
+  position: absolute; inset: 20px 20px 0; display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 24px 24px 0 0; background: var(--cream); box-shadow: 0 -20px 60px rgba(18, 48, 58, .25);
+}
+.d5-d .d5-ov-top { display: flex; align-items: center; gap: 20px; padding: 26px 40px 10px; }
+.d5-d .d5-ov-top h2 { margin: 0 auto 0 0; font: 500 40px/1 var(--serif); }
+.d5-d .d5-sort { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--mut); }
+.d5-d .d5-sort select {
+  height: 40px; padding: 0 12px; border-radius: 999px; border: 1px solid var(--line2); background: #FBF8F1;
+  font: 500 14px var(--sans); color: var(--ink);
+}
+.d5-d .d5-ov-x { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; background: var(--cream2); }
+.d5-d .d5-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 40px 18px; border-bottom: 1px solid var(--line); }
+.d5-d .d5-ov-sc { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px 40px 110px; }
+.d5-d .d5-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 22px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .d5-d .d5-hint span { animation: d5-bob 1.6s ease-in-out infinite; }
+  .d5-d .d5-ov:not([hidden]) .d5-ov-panel { animation: d5-rise .4s cubic-bezier(.2, .7, .2, 1) both; }
+}

@@ -1,0 +1,109 @@
+/* Design 5 · Split Scroll — mobile: a snap column of flyer cards between a slim top bar and a fixed cream glass panel
+   with the current deal; Search and All / Saved are sheets. Every rule is scoped to .d5-m. The column ends where the
+   panel begins, so the panel never covers a flyer. */
+.d5-m {
+  position: fixed; inset: 0; max-width: 600px; margin: 0 auto; overflow: hidden; background: var(--cream);
+  --st: env(safe-area-inset-top, 0px); --sb: env(safe-area-inset-bottom, 0px);
+  --bar: 56px; --ph: 226px; /* top bar / panel height */
+  --sh: calc(100dvh - var(--st) - var(--bar) - var(--ph) - 16px - var(--sb)); /* height of the flyer column */
+}
+.d5-m * { -webkit-tap-highlight-color: transparent; }
+.d5-m .d5-page { position: absolute; inset: 0; }
+
+/* ---------- top bar (right end reserved for the preview ◐) ---------- */
+.d5-m .d5-mbar {
+  position: absolute; z-index: 3; top: 0; left: 0; right: 0; height: calc(var(--st) + var(--bar));
+  padding: var(--st) 58px 0 12px; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+}
+.d5-m .d5-mlogo img { height: 38px; width: auto; margin-left: -6px; }
+.d5-m .d5-mnav { display: flex; align-items: center; gap: 6px; }
+.d5-m .d5-mb {
+  position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  min-width: 40px; height: 40px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--line2);
+  background: #FBF8F1; font-size: 14px; font-weight: 700;
+}
+.d5-m .d5-mb small { font-size: 12px; font-weight: 500; color: var(--soft); }
+.d5-m .d5-badge {
+  position: absolute; top: -4px; right: -4px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px;
+  background: var(--like); color: #fff; font-size: 11px; font-weight: 700; line-height: 18px; text-align: center;
+}
+
+/* ---------- flyer column ---------- */
+.d5-m .d5-mreel {
+  position: absolute; left: 0; right: 0; top: calc(var(--st) + var(--bar)); height: var(--sh);
+  overflow-y: scroll; scroll-snap-type: y mandatory; overscroll-behavior: contain; scrollbar-width: none;
+  padding: calc(var(--sh) * .05) 0; /* items are 90 % tall: the neighbours peek in, first and last can centre */
+}
+.d5-m .d5-mreel::-webkit-scrollbar { display: none; }
+.d5-m .d5-mreel:focus-visible { outline-offset: -3px; }
+.d5-m .d5-it {
+  height: calc(var(--sh) * .9); display: flex; align-items: center; justify-content: center;
+  scroll-snap-align: center; scroll-snap-stop: always; container-type: size;
+}
+.d5-m .d5-card {
+  display: block; width: min(calc(100cqw - 64px), calc((100cqh - 8px) * .5625)); aspect-ratio: 9 / 16;
+  border-radius: 18px; overflow: hidden; box-shadow: 0 22px 44px rgba(18, 48, 58, .24);
+  transform: scale(.88) rotate(-2.5deg); opacity: .45;
+  transition: transform .5s cubic-bezier(.2, .7, .2, 1), opacity .5s;
+}
+.d5-m .d5-it:nth-child(even) .d5-card { transform: scale(.88) rotate(2.5deg); }
+.d5-m .d5-it.on .d5-card { transform: none; opacity: 1; }
+.d5-m .d5-card .flyer-card { width: 100%; height: 100%; }
+.d5-m .d5-mempty { position: absolute; left: 0; right: 0; top: calc(var(--st) + var(--bar)); height: var(--sh); display: grid; place-items: center; }
+.d5-m .d5-mempty > * { text-align: center; }
+.d5-m:not(.d5-none) .d5-mempty { display: none; }
+
+/* ---------- bottom panel (fixed height: the column above never resizes while scrolling) ---------- */
+.d5-m .d5-panel {
+  position: absolute; z-index: 3; left: 10px; right: 10px; bottom: calc(10px + var(--sb)); height: var(--ph);
+  display: flex; flex-direction: column; padding: 13px 16px 14px; border-radius: 24px;
+  background: rgba(251, 248, 241, .88); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(18, 48, 58, .08); box-shadow: 0 14px 40px rgba(18, 48, 58, .16);
+}
+.d5-m .d5-numrow { justify-content: space-between; flex-wrap: nowrap; min-height: 30px; }
+.d5-m .d5-num { font-size: 12px; letter-spacing: .16em; }
+.d5-m .d5-num b { font-size: 30px; }
+.d5-m .d5-pill { height: 28px; font-size: 12.5px; max-width: 60%; overflow: hidden; }
+.d5-m .d5-pinfo { min-width: 0; }
+.d5-m .d5-pinfo h2 { margin: 4px 0 1px; font: 500 26px/1.12 var(--serif); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.d5-m .d5-ar { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.d5-m .d5-kv { margin-top: 10px; }
+.d5-m .d5-kv > div { padding-top: 8px; }
+.d5-m .d5-kv dt { font-size: 10px; }
+.d5-m .d5-kv dd { font-size: 17px; margin-top: 1px; }
+.d5-m .d5-pacts { display: grid; grid-template-columns: 1.35fr 1fr 1fr; gap: 8px; margin-top: auto; }
+.d5-m .d5-btn { height: 46px; padding: 0 10px; font-size: 14px; gap: 6px; }
+
+/* ---------- sheets ---------- */
+.d5-m .d5-sheet {
+  position: absolute; z-index: 5; inset: 0; display: flex; flex-direction: column; background: var(--cream);
+  padding-top: var(--st);
+}
+.d5-m .d5-sh-h { display: flex; align-items: center; justify-content: space-between; padding: 12px 58px 6px 18px; }
+.d5-m .d5-sh-h h2 { margin: 0; font: 500 30px/1.1 var(--serif); }
+.d5-m .d5-sh-x { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--cream2); }
+.d5-m .d5-msf { padding: 6px 16px 4px; }
+.d5-m .d5-msf label {
+  display: flex; align-items: center; gap: 10px; height: 50px; padding: 0 16px; border-radius: 999px;
+  background: #fff; border: 1px solid var(--line2); color: var(--soft);
+}
+.d5-m .d5-msf label:focus-within { border-color: var(--ink); }
+.d5-m .d5-msf input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: 400 16px var(--sans); color: var(--ink); }
+.d5-m .d5-sh-b { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 4px 16px calc(var(--sb) + 24px); }
+.d5-m .d5-meta { margin: 8px 0 4px; font-size: 13px; color: var(--mut); }
+.d5-m .d5-meta-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 16px; }
+.d5-m .d5-meta-row select {
+  height: 40px; padding: 0 10px; border-radius: 999px; border: 1px solid var(--line2); background: #FBF8F1;
+  font: 500 16px var(--sans); color: var(--ink); max-width: 58%;
+}
+.d5-m .d5-mchips { display: flex; gap: 8px; overflow-x: auto; padding: 6px 16px 8px; scrollbar-width: none; }
+.d5-m .d5-mchips::-webkit-scrollbar { display: none; }
+.d5-m .d5-sheet[data-kind=saved] .d5-mchips { display: none; }
+.d5-m .d5-mgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding-top: 6px; }
+.d5-m .d5-mgrid .d5-c h3 { font-size: 17px; margin-right: 38px; }
+.d5-m .d5-mgrid .d5-c-bd { padding: 10px 11px 12px; }
+.d5-m .d5-mgrid .d5-c-sv { width: 32px; height: 32px; right: 8px; bottom: 10px; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .d5-m .d5-sheet:not([hidden]) { animation: d5-rise .35s cubic-bezier(.2, .7, .2, 1) both; }
+}
