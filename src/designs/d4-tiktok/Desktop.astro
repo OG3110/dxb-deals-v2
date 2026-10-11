@@ -1,0 +1,95 @@
+---
+import './d4.css';
+import './d4-desk.css';
+import { WA_GENERAL, WA_SELL, type ClientDeal } from '../../lib/deals';
+import * as M from './markup';
+interface Props { deals: ClientDeal[] }
+const { deals } = Astro.props;
+const s = M.stats(deals);
+// Server first paint: the first 8 slides of the "For you" feed; the client rebuilds the whole feed on init.
+const feed = M.forYou(deals);
+const slides = feed.slice(0, 8).map((d, i) => M.slideHTML(d, i, feed.length, false)).join('');
+const first = feed[0];
+---
+<div class="d4 d4-d">
+  <div class="d4-amb" data-amb aria-hidden="true">
+    <i class="on">{first?.img && <b style={`background-image:url('${first.img.sm}')`}></b>}</i><i></i>
+  </div>
+
+  <main class="d4-stage" data-main>
+    <section class="d4-left" aria-label="About and search">
+      <a href="/design-4/" class="d4-logo" aria-label="DXB Deals – start"><img src="/brand/logo.png" alt="DXB Deals" width="132" height="44" /></a>
+      <h1>Swipe through <span>Dubai's</span> best deals.</h1>
+      <p class="d4-lead">One business per screen — {s.total} running businesses from AED {s.from}. Save it, share it, or ask Tolga about it on WhatsApp in one tap.</p>
+      <p class="d4-kb"><kbd>Scroll</kbd> or <kbd>↑</kbd><kbd>↓</kbd> next / previous deal</p>
+
+      <div class="d4-sbox" data-sbox>
+        <form role="search" autocomplete="off">
+          <label>
+            <Fragment set:html={M.ICON.search(19)} />
+            <span class="d4-vh">Search businesses, areas or IDs</span>
+            <input type="search" data-bind="q" placeholder="Search “café”, “Jumeirah”, “under 1m”…" autocomplete="off" spellcheck="false"
+              aria-controls="d4-drop" aria-expanded="false" aria-keyshortcuts="Control+K Meta+K /" />
+          </label>
+          <kbd data-kbd aria-hidden="true">Ctrl K</kbd>
+        </form>
+        <div class="d4-drop" id="d4-drop" data-drop hidden>
+          <p class="d4-drop-h" data-results-head aria-live="polite" aria-atomic="true">{M.resultsText(s.total, '')}</p>
+          <div class="d4-drop-l" data-results></div>
+        </div>
+      </div>
+
+      <div class="d4-lbtns">
+        <button type="button" class="d4-allbtn" data-ov-open="all"><Fragment set:html={M.ICON.grid(17)} />All deals<small>{s.total}</small></button>
+        <button type="button" class="d4-svbtn" data-ov-open="saved"><Fragment set:html={M.ICON.heart(17)} />Saved<small data-saved-count>0</small></button>
+      </div>
+      <a class="d4-lwa" href={WA_GENERAL} target="_blank" rel="noopener"><Fragment set:html={M.ICON.wa(18)} />Questions? WhatsApp Tolga</a>
+    </section>
+
+    <section class="d4-phone" aria-label="Deal feed">
+      <div class="d4-tabs" role="group" aria-label="Feed" set:html={M.tabsHTML(['distress', 'foryou', 'new'], 'd4-tab')} />
+      <p class="d4-hint" aria-hidden="true"><span>⌃</span>Scroll for the next deal</p>
+      <div class="d4-reel" data-reel tabindex="-1" aria-label="Deals – scroll, use the arrow keys, double-click a flyer to save" set:html={slides} />
+      <div class="d4-feedempty" data-feed-empty></div>
+    </section>
+
+    <aside class="d4-right" aria-label="Position and filters">
+      <h2 class="d4-rh">Deal</h2>
+      <p class="d4-ctr"><span data-ctr>1 / {s.total}</span></p>
+      <p class="d4-ctr-l" data-feed-label>For you</p>
+      <div class="d4-nav">
+        <button type="button" data-prev aria-label="Previous deal" disabled><Fragment set:html={M.ICON.up()} /></button>
+        <button type="button" data-next aria-label="Next deal"><Fragment set:html={M.ICON.up()} /></button>
+      </div>
+      <h2 class="d4-rh">Filter</h2>
+      <Fragment set:html={M.feedFiltersHTML(deals)} />
+      <a class="d4-sell" href={WA_SELL} target="_blank" rel="noopener">Selling a business? <b>Talk to Tolga confidentially →</b></a>
+    </aside>
+  </main>
+
+  <div class="d4-ov" data-ov role="dialog" aria-modal="true" aria-labelledby="d4-ovh" aria-hidden="true" hidden>
+    <div class="d4-ov-dim" data-ov-x></div>
+    <div class="d4-ov-panel">
+      <header class="d4-ov-top">
+        <h2 id="d4-ovh" data-grid-head aria-live="polite" aria-atomic="true">{M.headingText(s.total, false)}</h2>
+        <label class="d4-sort"><span>Sort by</span><select data-sort set:html={M.sortOptionsHTML()} /></label>
+        <button type="button" class="d4-ov-x" data-ov-x aria-label="Close"><Fragment set:html={M.ICON.close(20)} /></button>
+      </header>
+      <div class="d4-chips" role="group" aria-label="Category" set:html={M.chipsHTML(deals, true)} />
+      <div class="d4-ov-sc" data-ov-scroll>
+        <div class="d4-grid" data-grid></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d4-toast" data-toast role="status"></div>
+</div>
+
+<script>
+  import { initDesktop } from './d4';
+  const wrap = document.querySelector<HTMLElement>('[data-version=desktop]');
+  if (wrap) {
+    if (document.documentElement.dataset.view === 'desktop') initDesktop(wrap.querySelector<HTMLElement>('.d4-d')!);
+    else wrap.remove(); // inactive version: drop it so only one set of [data-deal-id] elements exists
+  }
+</script>

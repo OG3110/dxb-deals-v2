@@ -1,0 +1,170 @@
+/* Design 4 · TikTok Feed — mobile: fullscreen feed with glass header, rail, caption and tab bar; Search / All / Saved
+   sheets (port of the glass mobile mockup). The tab bar stays on top of the sheets so they behave like app tabs. */
+.d4-m {
+  position: fixed; inset: 0; max-width: 600px; margin: 0 auto; overflow: hidden; background: #06161B;
+  --st: env(safe-area-inset-top, 0px); --sb: env(safe-area-inset-bottom, 0px);
+}
+.d4-m * { -webkit-tap-highlight-color: transparent; }
+.d4-page { position: absolute; inset: 0; }
+
+/* ---------- feed ---------- */
+.d4-mreel {
+  position: absolute; inset: 0; overflow-y: scroll; scroll-snap-type: y mandatory;
+  overscroll-behavior: contain; scrollbar-width: none; touch-action: manipulation;
+}
+.d4-mreel::-webkit-scrollbar { display: none; }
+.d4-mreel:focus-visible { outline-offset: -3px; }
+/* slide = column: flyer area (flex) above the caption, left of the rail — the caption may grow (distress chips wrap)
+   and the flyer shrinks instead of being covered; nothing ever overlaps the flyer */
+.d4-ms {
+  position: relative; height: 100%; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: calc(var(--st) + 70px) 76px calc(var(--sb) + 90px) 10px;
+  background: #06161B; user-select: none; -webkit-user-select: none;
+}
+.d4-ms-bg { position: absolute; inset: -60px; background: #06161B center / cover no-repeat; filter: blur(40px) saturate(1.5) brightness(.5); }
+.d4-ms-fl { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; container-type: size; }
+.d4-ms-fl .flyer-card {
+  width: min(100cqw, 56.25cqh); aspect-ratio: 9 / 16; border-radius: 20px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, .5), 0 0 0 1px rgba(255, 255, 255, .08);
+}
+
+.d4-mcap { position: relative; z-index: 3; flex: none; padding: 11px 13px 12px; border-radius: 20px; font-size: 13px; line-height: 1.4; }
+.d4-mcap-u { display: flex; align-items: center; gap: 7px; margin: 0 0 5px; font-size: 13px; font-weight: 700; }
+.d4-mlogo {
+  flex: none; width: 24px; height: 24px; border-radius: 50%;
+  background: #12303A url(/brand/logo.png) center / 190% no-repeat; border: 1.5px solid var(--gold);
+}
+.d4-mcap-u small {
+  margin-left: auto; padding: 3px 8px; border-radius: 999px; background: var(--glass2);
+  font-size: 11px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.d4-mcap h2 { margin: 0; font-size: 16px; font-weight: 800; line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.d4-mcap-a {
+  display: flex; align-items: center; gap: 4px; margin: 1px 0 0; color: var(--mut); font-size: 12px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.d4-mcap-a svg { flex: none; }
+.d4-mcap-kv { display: flex; flex-wrap: wrap; gap: 5px; margin: 8px 0 0; }
+.d4-mcap-kv span {
+  padding: 4px 9px; border-radius: 999px; background: var(--glass2);
+  font-size: 11px; font-weight: 700; white-space: nowrap; font-variant-numeric: tabular-nums;
+}
+.d4-mcap-kv .d4-p { background: var(--gold); color: var(--gold-ink); font-size: 12px; font-weight: 800; }
+.d4-mcap-kv .d4-pd { background: var(--red); color: #fff; }
+
+.d4-mrail {
+  position: absolute; z-index: 3; right: 8px; bottom: calc(var(--sb) + 90px);
+  display: flex; flex-direction: column; align-items: center; gap: 11px; padding: 10px 5px; border-radius: 999px;
+}
+.d4-me { position: relative; width: 42px; height: 42px; margin-bottom: 5px; }
+.d4-me b { display: block; width: 42px; height: 42px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, .85); background: #fff url(/brand/tolga.png) 50% 14% / 230% no-repeat; }
+.d4-me::after {
+  content: '+'; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%);
+  width: 18px; height: 18px; border-radius: 50%; background: var(--gold); color: var(--gold-ink);
+  font-size: 13px; font-weight: 900; line-height: 18px; text-align: center;
+}
+.d4-act { display: flex; flex-direction: column; align-items: center; gap: 3px; width: 52px; color: #fff; font-size: 10px; font-weight: 700; }
+.d4-act i {
+  width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  background: var(--glass2); border: 1px solid var(--gline); transition: transform .15s, background-color .2s;
+}
+.d4-act:active i { transform: scale(.9); }
+.d4-act-wa i { background: var(--wa); border-color: transparent; color: #fff; box-shadow: 0 6px 20px rgba(37, 211, 102, .5); }
+.d4-act-sv[aria-pressed=true] i { background: var(--gold); border-color: transparent; color: var(--gold-ink); }
+
+.d4-mhint {
+  position: absolute; z-index: 4; left: 50%; bottom: calc(var(--sb) + 250px); transform: translateX(-50%); margin: 0;
+  padding: 8px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; white-space: nowrap;
+  pointer-events: none; transition: opacity .4s;
+}
+.d4-moved .d4-mhint, .d4-none .d4-mhint { opacity: 0; }
+.d4-mempty { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; padding: 80px 16px 110px; }
+.d4-none .d4-mempty { display: flex; }
+
+/* ---------- glass header (right end reserved for the preview bar's ◐ button) ---------- */
+.d4-mhdr {
+  position: absolute; z-index: 20; top: calc(var(--st) + 10px); left: 10px; right: 58px; height: 50px;
+  display: flex; align-items: center; gap: 6px; padding: 0 6px; border-radius: 999px;
+}
+.d4-mlg {
+  flex: none; width: 36px; height: 36px; border-radius: 50%;
+  background: #12303A url(/brand/logo.png) center / 190% no-repeat; border: 1.5px solid var(--gold);
+}
+.d4-seg { flex: 1; min-width: 0; display: flex; justify-content: center; gap: 1px; }
+.d4-segb {
+  height: 34px; padding: 0 10px; border-radius: 999px; white-space: nowrap;
+  color: var(--mut); font-size: 13px; font-weight: 700; transition: background-color .2s, color .2s;
+}
+.d4-segb[aria-pressed=true] { background: var(--txt); color: #06161B; }
+.d4-fchip {
+  flex: 1; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 8px; height: 36px;
+  padding: 0 12px; border-radius: 999px; background: var(--gold); color: var(--gold-ink); font-size: 13.5px; font-weight: 800;
+}
+.d4-fchip [data-feed-chip-text] { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.d4-fchip svg { flex: none; }
+.d4-hdr-cat .d4-seg { display: none; }
+.d4-mic { flex: none; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--glass2); }
+
+/* ---------- glass tab bar ---------- */
+.d4-tabbar {
+  position: absolute; z-index: 40; left: 12px; right: 12px; bottom: calc(var(--sb) + 12px); height: 64px;
+  display: flex; justify-content: space-around; align-items: center; border-radius: 26px; background: rgba(10, 28, 34, .62);
+}
+.d4-tabbar button {
+  position: relative; width: 60px; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  color: var(--mut); font-size: 10px; font-weight: 700; white-space: nowrap;
+}
+.d4-tabbar button[aria-current=true] { color: var(--txt); }
+.d4-tabbar button[aria-current=true]::after {
+  content: ''; position: absolute; bottom: -8px; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--gold); box-shadow: 0 0 8px var(--gold);
+}
+.d4-msell { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: -18px; color: var(--gold); font-size: 10px; font-weight: 800; }
+.d4-msell i {
+  width: 52px; height: 52px; border-radius: 18px; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #F2C94C, #E0A93A); color: var(--gold-ink); box-shadow: 0 8px 24px rgba(242, 201, 76, .45);
+}
+.d4-badge {
+  position: absolute; top: -4px; right: 10px; min-width: 16px; padding: 0 5px; border-radius: 999px;
+  background: var(--gold); color: var(--gold-ink); font-size: 10px; font-weight: 800; line-height: 16px; text-align: center;
+}
+
+/* ---------- sheets: Search, All deals, Saved ---------- */
+.d4-sheet {
+  position: absolute; z-index: 30; inset: 0; display: flex; flex-direction: column; padding-top: calc(var(--st) + 12px);
+  background: rgba(6, 22, 27, .92); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
+}
+.d4-sh-h { flex: none; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 4px 58px 10px 16px; }
+.d4-sh-h h2 { flex: 1; margin: 0; font-size: 22px; font-weight: 800; }
+.d4-sh-x { flex: none; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--glass2); }
+.d4-sbx { flex: none; margin: 0 14px; }
+.d4-sbx label {
+  display: flex; align-items: center; gap: 10px; padding: 0 14px; border-radius: 16px;
+  background: var(--glass2); border: 1px solid var(--gline); color: var(--mut); transition: border-color .2s;
+}
+.d4-sbx label:focus-within { border-color: var(--gold); }
+.d4-sbx svg { flex: none; }
+.d4-sbx input {
+  flex: 1; min-width: 0; height: 48px; background: none; border: 0; outline: none;
+  color: var(--txt); font: 16px var(--font);
+}
+.d4-sbx input::placeholder { color: rgba(244, 247, 248, .45); }
+.d4 .d4-sbx input:focus-visible { outline: none; }
+.d4-sh-b { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 0 10px calc(var(--sb) + 100px); }
+.d4-meta { margin: 0; padding: 12px 6px 8px; color: var(--mut); font-size: 13px; font-weight: 600; }
+.d4-meta-row { flex: none; display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 0 16px 10px; }
+.d4-m select { height: 36px; max-width: 190px; font-size: 16px; }
+.d4-mchips { flex: none; display: flex; gap: 6px; overflow-x: auto; padding: 0 14px 12px; scrollbar-width: none; }
+.d4-mchips::-webkit-scrollbar { display: none; }
+.d4-m .d4-chip { height: 36px; padding: 0 13px; }
+[data-kind=saved] .d4-mchips { display: none; }
+.d4-mgrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.d4-mgrid .d4-c { border-radius: 18px; background: rgba(10, 25, 30, .55); border-color: rgba(255, 255, 255, .12); }
+.d4-mgrid .d4-c-bd { padding-right: 44px; }
+.d4-mgrid .d4-c-sv { width: 34px; height: 34px; right: 6px; bottom: 18px; }
+.d4-m .d4-toast { position: absolute; top: calc(var(--st) + 72px); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .d4-sheet:not([hidden]) { animation: d4-rise .36s cubic-bezier(.2, .8, .2, 1); }
+}

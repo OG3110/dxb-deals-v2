@@ -1,0 +1,79 @@
+---
+import './d4.css';
+import './d4-mob.css';
+import { WA_SELL, type ClientDeal } from '../../lib/deals';
+import * as M from './markup';
+interface Props { deals: ClientDeal[] }
+const { deals } = Astro.props;
+const s = M.stats(deals);
+// Server first paint: the first 8 slides of the "For you" feed; the client rebuilds the whole feed on init.
+const feed = M.forYou(deals);
+const slides = feed.slice(0, 8).map((d, i) => M.mslideHTML(d, i, feed.length, false)).join('');
+---
+<div class="d4 d4-m">
+  <h1 class="d4-vh">DXB Deals – {s.total} businesses for sale in Dubai</h1>
+  <div class="d4-page" data-page>
+    <div class="d4-mreel" data-reel tabindex="-1" aria-label="Deals – swipe up for the next one, double-tap a flyer to save" set:html={slides} />
+    <div class="d4-mempty" data-feed-empty></div>
+    <p class="d4-mhint d4-glass" aria-hidden="true">↑ Swipe up for the next deal</p>
+
+    <header class="d4-mhdr d4-glass" data-hdr>
+      <a href="/design-4/" class="d4-mlg" aria-label="DXB Deals – start"></a>
+      <div class="d4-seg" role="group" aria-label="Feed" set:html={M.tabsHTML(['foryou', 'distress', 'new'], 'd4-segb')} />
+      <button type="button" class="d4-fchip" data-feed-chip data-set-feed="foryou" hidden>
+        <span data-feed-chip-text></span><span class="d4-vh">– back to all deals</span><Fragment set:html={M.ICON.close(14)} />
+      </button>
+      <button type="button" class="d4-mic" data-open-search aria-label="Search deals"><Fragment set:html={M.ICON.search(20)} /></button>
+    </header>
+  </div>
+
+  <section class="d4-sheet" data-sheet="search" role="dialog" aria-labelledby="d4-ssh" hidden>
+    <div class="d4-sh-h">
+      <h2 id="d4-ssh">Search</h2>
+      <button type="button" class="d4-sh-x" data-sheet-x aria-label="Close search"><Fragment set:html={M.ICON.close(18)} /></button>
+    </div>
+    <form class="d4-sbx" role="search" autocomplete="off">
+      <label><Fragment set:html={M.ICON.search(18)} /><span class="d4-vh">Search businesses, areas or IDs</span>
+        <input type="search" data-bind="q" placeholder="Business, area or ID" enterkeyhint="search" autocomplete="off" spellcheck="false" />
+      </label>
+    </form>
+    <div class="d4-sh-b" data-scroll>
+      <p class="d4-meta" data-results-head aria-live="polite" aria-atomic="true">{M.resultsText(s.total, '')}</p>
+      <div data-results></div>
+    </div>
+  </section>
+
+  <section class="d4-sheet" data-sheet="grid" data-kind="all" role="dialog" aria-labelledby="d4-gsh" hidden>
+    <div class="d4-sh-h">
+      <h2 id="d4-gsh" data-grid-title>All deals</h2>
+      <button type="button" class="d4-sh-x" data-sheet-x aria-label="Close"><Fragment set:html={M.ICON.close(18)} /></button>
+    </div>
+    <div class="d4-mchips" role="group" aria-label="Category" set:html={M.chipsHTML(deals, false)} />
+    <div class="d4-meta d4-meta-row">
+      <span data-grid-head aria-live="polite" aria-atomic="true">{M.headingText(s.total, false)}</span>
+      <label><span class="d4-vh">Sort by</span><select data-sort set:html={M.sortOptionsHTML()} /></label>
+    </div>
+    <div class="d4-sh-b" data-scroll>
+      <div class="d4-mgrid" data-grid></div>
+    </div>
+  </section>
+
+  <nav class="d4-tabbar d4-glass" aria-label="Main">
+    <button type="button" data-tab="home" aria-current="true"><Fragment set:html={M.ICON.home()} />Home</button>
+    <button type="button" data-tab="search"><Fragment set:html={M.ICON.search(24)} />Search</button>
+    <a class="d4-msell" href={WA_SELL} target="_blank" rel="noopener" aria-label="Sell your business – WhatsApp Tolga confidentially"><i><Fragment set:html={M.ICON.plus()} /></i><span aria-hidden="true">Sell</span></a>
+    <button type="button" data-tab="all"><Fragment set:html={M.ICON.grid(24)} />All deals</button>
+    <button type="button" data-tab="saved"><Fragment set:html={M.ICON.mark(24)} />Saved<span class="d4-badge" data-saved-badge hidden>0</span></button>
+  </nav>
+
+  <div class="d4-toast d4-glass" data-toast role="status"></div>
+</div>
+
+<script>
+  import { initMobile } from './d4';
+  const wrap = document.querySelector<HTMLElement>('[data-version=mobile]');
+  if (wrap) {
+    if (document.documentElement.dataset.view === 'mobile') initMobile(wrap.querySelector<HTMLElement>('.d4-m')!);
+    else wrap.remove(); // inactive version: drop it so only one set of [data-deal-id] elements exists
+  }
+</script>
