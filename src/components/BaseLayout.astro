@@ -3,6 +3,12 @@ import '../designs/shared.css';
 import type { ClientDeal } from '../lib/deals';
 interface Props { title: string; deals?: ClientDeal[]; bodyClass?: string; fonts?: string }
 const { title, deals = [], bodyClass = '', fonts } = Astro.props;
+// Keep the payload valid JSON but safe inside an inline <script>.
+const UNSAFE = [60, 62, 38, 8232, 8233]; // < > & U+2028 U+2029
+const safeJson = (v: unknown) => Array.from(JSON.stringify(v), (ch) => {
+  const c = ch.charCodeAt(0);
+  return UNSAFE.includes(c) ? String.fromCharCode(92) + 'u' + c.toString(16).padStart(4, '0') : ch;
+}).join('');
 ---
 <!doctype html>
 <html lang="en">
@@ -14,7 +20,7 @@ const { title, deals = [], bodyClass = '', fonts } = Astro.props;
   <link rel="icon" href="/brand/logo.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   {fonts && <link rel="stylesheet" href={fonts} />}
-  <script type="application/json" id="deals-data" set:html={JSON.stringify(deals)} />
+  <script type="application/json" id="deals-data" set:html={safeJson(deals)} />
 </head>
 <body class={bodyClass}>
   <slot />
